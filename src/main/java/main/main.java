@@ -21,6 +21,7 @@ public class main {
 
         staticFiles.location("/");
 
+
         Configuration configuration=new Configuration();
         configuration.setClassForTemplateLoading(main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine(configuration);
