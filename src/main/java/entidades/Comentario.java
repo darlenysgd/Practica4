@@ -1,3 +1,5 @@
+package entidades;
+
 /**
  * Created by darle on 6/3/2017.
  */
@@ -8,6 +10,12 @@ public class Comentario {
     private Usuario autor;
     private Articulo articulo;
 
+    public Comentario(long id, String comentatio, Usuario autor, Articulo articulo) {
+        this.id = id;
+        this.comentatio = comentatio;
+        this.autor = autor;
+        this.articulo = articulo;
+    }
 
     public long getId() {
         return id;

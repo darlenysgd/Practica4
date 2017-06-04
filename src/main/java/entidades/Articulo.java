@@ -1,3 +1,5 @@
+package entidades;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,6 +18,15 @@ public class Articulo {
     private ArrayList<Comentario> comentarios;
     private ArrayList<Etiqueta> etiquetas;
 
+    public Articulo(long id, String titulo, String cuerpo, Usuario autor, Date fecha, ArrayList<Comentario> comentarios, ArrayList<Etiqueta> etiquetas) {
+        this.id = id;
+        this.titulo = titulo;
+        this.cuerpo = cuerpo;
+        this.autor = autor;
+        this.fecha = fecha;
+        this.comentarios = comentarios;
+        this.etiquetas = etiquetas;
+    }
 
     public long getId() {
         return id;
