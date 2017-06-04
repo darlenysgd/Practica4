@@ -25,7 +25,6 @@ public class main {
         configuration.setClassForTemplateLoading(main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine(configuration);
 
-
        get("/Home", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
