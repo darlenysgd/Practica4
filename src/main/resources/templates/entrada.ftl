@@ -70,21 +70,21 @@
               <!-- Blog Post -->
 
                 <!-- Title -->
-                <h1>${articulo.titulo}</h1>
+                <h1>${articulo.getTitulo()}</h1>
 
                 <!-- Author -->
-                <p class="lead">
-                    by <a href="#">${articulo.autor.username}</a>
+                <p>
+                    by <a href="#">${articulo.getAutor().getNombre()}</a>
                 </p>
 
                 <hr>
 
                 <!-- Date/Time -->
-                <p><span class="glyphicon glyphicon-time"></span> Posted on ${articulo.fecha?string["0"]}</p>
+                <p><span class="glyphicon glyphicon-time"></span> Posted on ${articulo.getFecha()?string["0"]}</p>
 
 
                 <!-- Post Content -->
-                <p>${articulo.cuerpo}</p>
+                <p>${articulo.getCuerpo()}</p>
 
                 <hr>
 

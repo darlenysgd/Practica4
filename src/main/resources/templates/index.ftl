@@ -17,6 +17,8 @@
     <!-- Custom CSS -->
     <link href="css/blog-home.css" rel="stylesheet">
 
+    <link href="css/Estilos.css" rel="stylesheet">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -29,20 +31,20 @@
 <body>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top topbar" role="navigation">
         <div class="container">
 
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="collapse navbar-collapse topbar" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#">Inicio</a>
+                        <a href="/Home"><span class="dorado">Inicio</span></a>
                     </li>
                     <li>
-                        <a href="#">Nueva entrada</a>
+                        <a href="/NuevoPost"><span class="dorado">Nueva entrada</span></a>
                     </li>
                     <li>
-                        <a href="#">Registro</a>
+                        <a href="#"><span class="dorado">Registro</span></a>
                     </li>
                 </ul>
             </div>
@@ -64,22 +66,22 @@
                     <small>by: Darlenys e Isaac</small>
                 </h1>
 
-                <!-- First Blog Post -->
-                <h2>
-                    <a href="#">Blog Post Title</a>
-                </h2>
-                <p class="lead">
-                    by <a href="index.php">Start Bootstrap</a>
-                </p>
-                <p><span class="glyphicon glyphicon-time"></span> Posted on August 28, 2013 at 10:00 PM</p>
-                <hr>
-                <img class="img-responsive" src="http://placehold.it/900x300" alt="">
-                <hr>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, veritatis, tempora, necessitatibus inventore nisi quam quia repellat ut tempore laborum possimus eum dicta id animi corrupti debitis ipsum officiis rerum.</p>
-                <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                <#list articulos as art>
+                    <h2>
+                        <a href="#">${art.getTitulo()}</a>
+                    </h2>
+                    <p>
+                        by <a href="">${art.getAutor().getNombre()}</a>
+                    </p>
+                    <p><span class="glyphicon glyphicon-time"></span>${art.getFecha()}</p>
+                    <hr>
 
-                <hr>
+                    <p>${art.getCuerpo()}</p>
+                    <a class="btn btn-primary" href="#">Leer Más<span class="glyphicon glyphicon-chevron-right"></span></a>
 
+                    <hr>
+
+                </#list>
 
             </div>
 
@@ -88,7 +90,7 @@
 
                 <!-- Blog Categories Well -->
                 <div class="well">
-                    <h4>Blog Categories</h4>
+                    <h4>Puede que sirva pa las etiquetas</h4>
                     <div class="row">
                         <div class="col-lg-6">
                             <ul class="list-unstyled">
@@ -122,8 +124,8 @@
 
                 <!-- Side Widget Well -->
                 <div class="well">
-                    <h4>Side Widget Well</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.</p>
+                    <h4>Sobre Nosotros</h4>
+                    <p>Cuando se me ocurra algo te aviso. GN</p>
                 </div>
 
             </div>
@@ -131,13 +133,13 @@
         </div>
         <!-- /.row -->
 
-        <hr>
+
 
         <!-- Footer -->
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright &copy; Your Website 2014</p>
+                    <p>Copyright &copy; Lit AF 2017</p>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
