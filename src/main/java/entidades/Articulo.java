@@ -1,5 +1,8 @@
+package entidades;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -12,10 +15,21 @@ public class Articulo {
     private String titulo;
     private String cuerpo;
     private Usuario autor;
-    private Date fecha;
+    private String fecha;
     private ArrayList<Comentario> comentarios;
     private ArrayList<Etiqueta> etiquetas;
+    private List<Articulo> articulos;
 
+    public Articulo(long id, String titulo, String cuerpo, Usuario autor, String fecha) {
+        this.id = id;
+        this.titulo = titulo;
+        this.cuerpo = cuerpo;
+        this.autor = autor;
+        this.fecha = fecha;
+    }
+
+    public Articulo() {
+    }
 
     public long getId() {
         return id;
@@ -49,11 +63,11 @@ public class Articulo {
         this.autor = autor;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
@@ -71,5 +85,13 @@ public class Articulo {
 
     public void setEtiquetas(ArrayList<Etiqueta> etiquetas) {
         this.etiquetas = etiquetas;
+    }
+
+    public List<Articulo> getArticulos() {
+        return articulos;
+    }
+
+    public void setArticulos(List<Articulo> articulos) {
+        this.articulos = articulos;
     }
 }

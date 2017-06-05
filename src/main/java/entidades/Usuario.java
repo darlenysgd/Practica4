@@ -1,3 +1,5 @@
+package entidades;
+
 /**
  * Created by darle on 6/3/2017.
  */
@@ -9,6 +11,13 @@ public class Usuario {
     private boolean administrator;
     private boolean autor;
 
+    public Usuario(String username, String nombre, String password, boolean administrator, boolean autor) {
+        this.username = username;
+        this.nombre = nombre;
+        this.password = password;
+        this.administrator = administrator;
+        this.autor = autor;
+    }
 
     public String getUsername() {
         return username;
