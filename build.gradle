@@ -17,5 +17,6 @@ dependencies {
     compile 'com.sparkjava:spark-template-freemarker:2.3'
     compile 'org.freemarker:freemarker:2.3.23'
     compile 'com.sparkjava:spark-debug-tools:0.5'
+    runtime 'org.slf4j:slf4j-simple:1.7.21'
 
 }
