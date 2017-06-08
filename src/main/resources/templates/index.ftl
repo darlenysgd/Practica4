@@ -68,7 +68,7 @@
 
                 <#list articulos as art>
                     <h2>
-                        <a href="#">${art.getTitulo()}</a>
+                        <a href="/Entrada/${art_index}">${art.getTitulo()}</a>
                     </h2>
                     <p>
                         by <a href="">${art.getAutor().getNombre()}</a>
@@ -77,7 +77,7 @@
                     <hr>
 
                     <p>${art.getCuerpo()}</p>
-                    <a class="btn btn-primary" href="#">Leer Más<span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <a class="btn btn-primary" href="/Entrada/${art_index}">Leer Más<span class="glyphicon glyphicon-chevron-right"></span></a>
 
                     <hr>
 
