@@ -88,7 +88,28 @@ public class main {
         System.out.println("Cantidad: "+ listaArticulos.size());
 
 
+
         articulo.setArticulos(lista);
+
+        before("/NuevoUsuario", (request, response) -> {
+
+           String str = request.session().attribute("usuario");
+            System.out.println(str);
+            if (str == null || !autorInsertar.isAdministrator()){
+                    response.redirect("/Home");
+            }
+        });
+
+        before("/NuevoPost", (request, response) -> {
+
+            String str = request.session(true).attribute("usuario");
+            if (str == null ){
+                if ((autorInsertar.getUsername() == str && !autorInsertar.isAdministrator()) || (autorInsertar.getUsername() == str && !autorInsertar.isAutor()) ){
+                    response.redirect("/Home");
+                }
+
+            }
+        });
 
         get("/Home", (request, response) -> {
 
@@ -129,11 +150,8 @@ public class main {
             String fecha = new Date().toString();
             Articulo art = new Articulo(id, titulo, contenido, usuario1, fecha);
             lista.add(art);
-
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("articulos", lista);
-
-
             return new ModelAndView(attributes, "index.ftl");
 
         }, freeMarkerEngine);
@@ -157,6 +175,37 @@ public class main {
 
 
             return new ModelAndView(attributes, "index.ftl");
+
+        }, freeMarkerEngine);
+
+        get ("/login", (request, response) ->{
+            Map<String, Object> attributes = new HashMap<>();
+
+            return new ModelAndView(attributes, "login.ftl");
+                }, freeMarkerEngine );
+
+
+        post("/loginForm", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+
+            String Usuario = request.queryParams("Usuario");
+            String clave = request.queryParams("password");
+
+            if(autorInsertar.getUsername().equals(Usuario)){
+
+                if (autorInsertar.getPassword().equals(clave)){
+
+                    request.session().attribute("usuario", Usuario);
+                    System.out.println(Usuario);
+                    response.redirect("/Home");
+                }
+            }
+            else {
+
+                response.redirect("/login");
+            }
+
+           return null;
 
         }, freeMarkerEngine);
     }
