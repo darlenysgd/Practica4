@@ -12,18 +12,14 @@
     <title>Programación Web</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="css/blog-home.css" rel="stylesheet">
+    <link href="/css/blog-home.css" rel="stylesheet">
 
-    <link href="css/Estilos.css" rel="stylesheet">
+    <link href="/css/Estilos.css" rel="stylesheet">
 
-
-
-    <link href="css/bootstrap-select.min.css">
-
-    <script src="js/bootstrap-select.js"></script>
+>
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

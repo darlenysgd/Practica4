@@ -124,7 +124,7 @@ public class main {
 
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
-            attributes.put("articulo", lista.get(indice));
+            attributes.put("articulo", articulo.getArticulos().get(indice));
             attributes.put("comentarios", comentarios);
             attributes.put("etiquetas", etiquetas);
             return new ModelAndView(attributes, "entrada.ftl");}, freeMarkerEngine);

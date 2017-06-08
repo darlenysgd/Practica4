@@ -7,15 +7,15 @@
         <form action="/crear" method="post">
         <div class="form-group">
             <label>Título: </label>
-            <input name="titulo" type="text" class="form-group"/>
+            <input name="titulo" type="text" class="form-control"/>
         </div>
         <div class="form-group">
             <label>Contenido: </label>
-            <textarea id="contenido" name="contenido" class="contenido"></textarea>
+            <textarea id="contenido" name="contenido" class="contenido form-control" ></textarea>
         </div>
         <div class="form-group">
             <label>Etiquetas: </label>
-            <input name="etiquetas" class="etiquetas"/>
+            <input class=" form-control"></select>
         </div>
 
         <button name="guardar" type="submit">Guardar</button>
