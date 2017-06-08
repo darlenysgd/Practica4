@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Spoiler Alert</title>
+    <title>Programación Web</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -58,14 +58,14 @@
     <!-- Page Content -->
     <div class="container">
 
-        <div class="row">
+        <div class="row body-row">
 
             <!-- Blog Entries Column -->
             <div class="col-md-8">
 
                 <h1 class="page-header">
-                    Spoiler Alert
-                    <small>by: Darlenys e Isaac</small>
+                    Programación Web
+                    <small>Práctica #3</small>
                 </h1>
 
                 <#list articulos as art>
@@ -73,7 +73,7 @@
                         <a href="/Entrada/${art_index}">${art.getTitulo()}</a>
                     </h2>
                     <p>
-                        by <a href="">${art.getAutor().getNombre()}</a>
+                        Autor: <a href="">${art.getAutor().getNombre()}</a>
                     </p>
                     <p><span class="glyphicon glyphicon-time"></span>${art.getFecha()}</p>
                     <hr>

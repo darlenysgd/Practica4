@@ -1,16 +1,17 @@
 <#include "Includes/Header.ftl">
 
 
-    <h2>Nueva Publicación</h2>
-
-    <form action="/crear" method="post">
+<div class="panel panel-default panel-css">
+    <div class="panel-heading panel-css">Nueva Publicación</div>
+    <div class="panel-body">
+        <form action="/crear" method="post">
         <div class="form-group">
             <label>Título: </label>
-            <input name="titulo" class="entrada"/>
+            <input name="titulo" type="text" class="form-group"/>
         </div>
         <div class="form-group">
             <label>Contenido: </label>
-            <textarea name="contenido" class="contenido"></textarea>
+            <textarea id="contenido" name="contenido" class="contenido"></textarea>
         </div>
         <div class="form-group">
             <label>Etiquetas: </label>
@@ -19,5 +20,7 @@
 
         <button name="guardar" type="submit">Guardar</button>
     </form>
+    </div>
+</div>
 
 <#include "Includes/Footer.ftl">

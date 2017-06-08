@@ -30,16 +30,15 @@ public class main {
 
         staticFiles.location("/");
         Articulo articulo = new Articulo();
-        articulo.setArticulos(lista);
 
         ArrayList<Comentario> comentarios = new ArrayList<>();
         ArrayList<Etiqueta> etiquetas = new ArrayList<>();
 
-        Usuario usuario1 = new Usuario("monti", "isaac", "lol", true, false);
-        lista.add(new Articulo(1, "probando la mielda eta", "tu real articulo namah", usuario1, "05-6-17"));
+        Usuario usuario1 = new Usuario("admin", "admin", "admin", true, false);
+       // lista.add(new Articulo("probando la vaina eta", "tu real articulo namah", usuario1, "05-6-17"));
 
-        comentarios.add(new Comentario(1, "Nice", usuario1, lista.get(0)));
-        comentarios.add(new Comentario(2, "Lol", usuario1, lista.get(0)));
+      //  comentarios.add(new Comentario(1, "Nice", usuario1, lista.get(0)));
+        //comentarios.add(new Comentario(2, "Lol", usuario1, lista.get(0)));
         etiquetas.add(new Etiqueta(1, "etiqueta1"));
         etiquetas.add(new Etiqueta(2, "etiqueta2"));
 
@@ -54,41 +53,32 @@ public class main {
             BootStrapService.startDb();
             DataBase.getInstancia().testConexion();
             BootStrapService.crearTablas();
-           // BlogService blogServices = new BlogService();
+
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
 
-        //Insertando articulo.
-
-        String fechaInsertar = new Date().toString();
-        Usuario autorInsertar = new Usuario();
-        autorInsertar.setNombre("Darlenys");
-        autorInsertar.setUsername("darlegz");
-        autorInsertar.setPassword("1234");
-        autorInsertar.setAdministrator(true);
-        autorInsertar.setAutor(true);
 
 
-        Articulo insertar = new Articulo();
-        insertar.setId(2);
-        insertar.setTitulo("Mi titulo");
-        insertar.setCuerpo("Contenido de mi articulo");
-        insertar.setFecha(fechaInsertar);
-        insertar.setAutor(autorInsertar);
 
 
-        /*if(BlogService.getArticulo((int) insertar.getId())==null){
-            BlogService.crearArticulo(insertar);
-        }*/
+
+        for(int i = 0; i < lista.size(); i++) {
+            if (BlogService.getAutor(lista.get(i).getAutor().getUsername()) == null) {
+                BlogService.crearUsuario(lista.get(i).getAutor());
+            }
+        }
+
+
 
         List<Articulo> listaArticulos = BlogService.listaArticulos();
+
         System.out.println("Cantidad: "+ listaArticulos.size());
 
 
-        articulo.setArticulos(lista);
+        articulo.setArticulos(listaArticulos);
 
         get("/Home", (request, response) -> {
 
@@ -123,15 +113,17 @@ public class main {
 
         post("/crear", (request, response) -> {
 
-            int id = 1;
+
             String titulo = request.queryParams("titulo");
             String contenido = request.queryParams("contenido");
             String fecha = new Date().toString();
-            Articulo art = new Articulo(id, titulo, contenido, usuario1, fecha);
-            lista.add(art);
+            Articulo art = new Articulo(titulo, contenido, usuario1, fecha);
+            BlogService.crearArticulo(art);
+
+
 
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("articulos", lista);
+            attributes.put("articulos", articulo.getArticulos());
 
 
             return new ModelAndView(attributes, "index.ftl");
@@ -146,7 +138,7 @@ public class main {
             String titulo = request.queryParams("titulo");
             String contenido = request.queryParams("contenido");
             String fecha = new Date().toString();
-            Articulo art = new Articulo(id, titulo, contenido, usuario1, fecha);
+            Articulo art = new Articulo(titulo, contenido, usuario1, fecha);
             lista.add(art);
 
 

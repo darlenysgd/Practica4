@@ -38,7 +38,7 @@ public class BootStrapService {
                 ");" +
                 "\n CREATE TABLE IF NOT EXISTS ARTICULO" +
                 "(\n" +
-                "  ID INTEGER PRIMARY KEY NOT NULL,\n" +
+                "  ID INTEGER PRIMARY KEY auto_increment,\n" +
                 "  TITULO VARCHAR(100) NOT NULL,\n" +
                 "  CONTENIDO VARCHAR(5000) NOT NULL,\n" +
                 "  AUTOR VARCHAR(25) REFERENCES USUARIO(USERNAME),\n" +

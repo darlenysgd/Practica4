@@ -1,5 +1,6 @@
 package entidades;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  * Created by darle on 6/3/2017.
  */
 
-public class Articulo {
+public class Articulo implements Serializable {
 
     private long id;
     private String titulo;
@@ -20,7 +21,7 @@ public class Articulo {
     private ArrayList<Etiqueta> etiquetas;
     private List<Articulo> articulos;
 
-    public Articulo(long id, String titulo, String cuerpo, Usuario autor, String fecha) {
+    public Articulo(String titulo, String cuerpo, Usuario autor, String fecha) {
         this.id = id;
         this.titulo = titulo;
         this.cuerpo = cuerpo;

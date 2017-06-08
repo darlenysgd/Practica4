@@ -1,12 +1,17 @@
 .topbar {
 
-    background-color: black;
+    background-color: Black;
+    height: 60px;
 
 }
 
+.body-row{
+
+    padding-top: 60px;
+}
 .dorado {
 
-    color: #e6b800;
+    color: #6290bc;
     font-weight: bold;
 
 }
@@ -20,4 +25,10 @@ h2{
 .entrada{
 
     width: 200px;
+}
+
+.panel-css{
+
+    width: 900px;
+    margin: auto;
 }
