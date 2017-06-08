@@ -30,6 +30,7 @@ public class main {
 
         staticFiles.location("/");
         Articulo articulo = new Articulo();
+        articulo.setArticulos(lista);
 
         ArrayList<Comentario> comentarios = new ArrayList<>();
         ArrayList<Etiqueta> etiquetas = new ArrayList<>();
@@ -79,6 +80,26 @@ public class main {
 
 
         articulo.setArticulos(listaArticulos);
+
+        before("/NuevoUsuario", (request, response) -> {
+
+           String str = request.session().attribute("usuario");
+            System.out.println(str);
+            if (str == null || !usuario1.isAdministrator()){
+                    response.redirect("/Home");
+            }
+        });
+
+        before("/NuevoPost", (request, response) -> {
+
+            String str = request.session(true).attribute("usuario");
+            if (str == null ){
+                if ((usuario1.getUsername() == str && !usuario1.isAdministrator()) || (usuario1.getUsername() == str && !usuario1.isAutor()) ){
+                    response.redirect("/Home");
+                }
+
+            }
+        });
 
         get("/Home", (request, response) -> {
 
@@ -149,6 +170,37 @@ public class main {
 
 
             return new ModelAndView(attributes, "index.ftl");
+
+        }, freeMarkerEngine);
+
+        get ("/login", (request, response) ->{
+            Map<String, Object> attributes = new HashMap<>();
+
+            return new ModelAndView(attributes, "login.ftl");
+                }, freeMarkerEngine );
+
+
+        post("/loginForm", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+
+            String Usuario = request.queryParams("Usuario");
+            String clave = request.queryParams("password");
+
+            if(usuario1.getUsername().equals(Usuario)){
+
+                if (usuario1.getPassword().equals(clave)){
+
+                    request.session().attribute("usuario", Usuario);
+                    System.out.println(Usuario);
+                    response.redirect("/Home");
+                }
+            }
+            else {
+
+                response.redirect("/login");
+            }
+
+           return null;
 
         }, freeMarkerEngine);
     }
