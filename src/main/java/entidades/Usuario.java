@@ -1,5 +1,7 @@
 package entidades;
 
+import java.util.List;
+
 /**
  * Created by darle on 6/3/2017.
  */
@@ -10,6 +12,11 @@ public class Usuario {
     private String password;
     private boolean administrator;
     private boolean autor;
+    private List<Usuario> usuarios;
+
+
+    public Usuario() {
+    }
 
     public Usuario(String username, String nombre, String password, boolean administrator, boolean autor) {
         this.username = username;
@@ -18,6 +25,7 @@ public class Usuario {
         this.administrator = administrator;
         this.autor = autor;
     }
+
 
     public String getUsername() {
         return username;
@@ -57,5 +65,13 @@ public class Usuario {
 
     public void setAutor(boolean autor) {
         this.autor = autor;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 }

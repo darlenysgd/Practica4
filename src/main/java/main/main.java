@@ -1,5 +1,8 @@
 package main;
 
+import Servicios.BlogService;
+import Servicios.BootStrapService;
+import Servicios.DataBase;
 import entidades.Comentario;
 import entidades.Etiqueta;
 import entidades.Usuario;
@@ -7,6 +10,7 @@ import freemarker.template.Configuration;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import entidades.Articulo;
@@ -20,6 +24,7 @@ import static spark.Spark.*;
 public class main {
 
     static List<Articulo> lista = new ArrayList<>();
+    static List<Usuario> listaUsuarios = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -45,6 +50,46 @@ public class main {
 
 
 
+        try {
+            BootStrapService.startDb();
+            DataBase.getInstancia().testConexion();
+            BootStrapService.crearTablas();
+           // BlogService blogServices = new BlogService();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        //Insertando articulo.
+
+        String fechaInsertar = new Date().toString();
+        Usuario autorInsertar = new Usuario();
+        autorInsertar.setNombre("Darlenys");
+        autorInsertar.setUsername("darlegz");
+        autorInsertar.setPassword("1234");
+        autorInsertar.setAdministrator(true);
+        autorInsertar.setAutor(true);
+
+
+        Articulo insertar = new Articulo();
+        insertar.setId(2);
+        insertar.setTitulo("Mi titulo");
+        insertar.setCuerpo("Contenido de mi articulo");
+        insertar.setFecha(fechaInsertar);
+        insertar.setAutor(autorInsertar);
+
+
+        /*if(BlogService.getArticulo((int) insertar.getId())==null){
+            BlogService.crearArticulo(insertar);
+        }*/
+
+        List<Articulo> listaArticulos = BlogService.listaArticulos();
+        System.out.println("Cantidad: "+ listaArticulos.size());
+
+
+        articulo.setArticulos(lista);
+
         get("/Home", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
@@ -58,6 +103,12 @@ public class main {
             return new ModelAndView(attributes, "NuevoPost.ftl");
         }, freeMarkerEngine);
 
+        get("/NuevoUsuario", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            return new ModelAndView(attributes, "RegistroUsuario.ftl");
+        }, freeMarkerEngine);
+
         get("/Entrada/:indice", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
@@ -69,7 +120,25 @@ public class main {
 
 
 
+
         post("/crear", (request, response) -> {
+
+            int id = 1;
+            String titulo = request.queryParams("titulo");
+            String contenido = request.queryParams("contenido");
+            String fecha = new Date().toString();
+            Articulo art = new Articulo(id, titulo, contenido, usuario1, fecha);
+            lista.add(art);
+
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put("articulos", lista);
+
+
+            return new ModelAndView(attributes, "index.ftl");
+
+        }, freeMarkerEngine);
+
+        post("/crearUsuario", (request, response) -> {
 
 
 
@@ -79,6 +148,7 @@ public class main {
             String fecha = new Date().toString();
             Articulo art = new Articulo(id, titulo, contenido, usuario1, fecha);
             lista.add(art);
+
 
 
 
