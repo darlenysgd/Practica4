@@ -11,7 +11,7 @@
         </div>
         <div class="form-group">
             <label>Contenido: </label>
-            <textarea id="contenido" name="contenido" class="contenido form-control" placeholder="${articulo.cuerpo}"></textarea>
+            <textarea id="contenido" name="contenido" class="contenido form-control" >${articulo.cuerpo}</textarea>
         </div>
         <div class="form-group">
             <label>Etiquetas: </label>
