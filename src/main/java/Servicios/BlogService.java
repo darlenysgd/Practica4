@@ -1,5 +1,6 @@
 package Servicios;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import entidades.Articulo;
 import entidades.Comentario;
 import entidades.Etiqueta;
@@ -78,7 +79,7 @@ public class BlogService {
                 String username = rs.getString("autor");
                 Usuario usr = getAutor(username);
                 art = new Articulo();
-                art.setId(rs.getInt("id"));
+                art.setId(rs.getLong("id"));
                 art.setTitulo(rs.getString("titulo"));
                 art.setCuerpo(rs.getString("contenido"));
                 art.setAutor(usr);
@@ -286,6 +287,72 @@ public class BlogService {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return ok;
+    }
+
+    public static boolean borrarArticulo(long id){
+
+        boolean ok = false;
+
+        Connection con = null;
+
+        try{
+
+            String query = "delete from articulo where id = ?";
+
+            con = DataBase.getInstancia().getConexion();
+
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+
+            preparedStatement.setLong(1,id);
+
+            int fila= preparedStatement.executeUpdate();
+            ok = fila > 0;
+
+        }  catch (SQLException ex) {
+            Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+
+        return ok;
+    }
+
+    public static boolean actualizarArticulo(Articulo art){
+
+        boolean ok = false;
+
+        Connection con = null;
+
+
+
+        String query = "update articulo set titulo=?, contenido=? where id = ?";
+        con = DataBase.getInstancia().getConexion();
+        //
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+
+            preparedStatement.setString(1, art.getTitulo());
+            preparedStatement.setString(2, art.getCuerpo());
+
+            int fila = preparedStatement.executeUpdate();
+
+            ok = fila > 0 ;
+
+        } catch (SQLException e) {
+            Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return ok;
     }

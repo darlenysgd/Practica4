@@ -17,7 +17,6 @@
             <label>Etiquetas: </label>
             <input class=" form-control"></select>
         </div>
-
         <button name="guardar" type="submit">Guardar</button>
     </form>
     </div>

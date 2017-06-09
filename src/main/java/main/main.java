@@ -81,6 +81,8 @@ public class main {
 
         articulo.setArticulos(listaArticulos);
 
+
+
         before("/NuevoUsuario", (request, response) -> {
 
            String str = request.session().attribute("usuario");
@@ -127,7 +129,8 @@ public class main {
             attributes.put("articulo", articulo.getArticulos().get(indice));
             attributes.put("comentarios", comentarios);
             attributes.put("etiquetas", etiquetas);
-            return new ModelAndView(attributes, "entrada.ftl");}, freeMarkerEngine);
+            return new ModelAndView(attributes, "entrada.ftl");
+            }, freeMarkerEngine);
 
 
 
@@ -140,16 +143,36 @@ public class main {
             String fecha = new Date().toString();
             Articulo art = new Articulo(titulo, contenido, usuario1, fecha);
             BlogService.crearArticulo(art);
+            articulo.getArticulos().add(art);
 
 
+            response.redirect("/Home");
 
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put("articulos", articulo.getArticulos());
-
-
-            return new ModelAndView(attributes, "index.ftl");
+            return  null;
 
         }, freeMarkerEngine);
+
+        post("/eliminarArticulo/:id", (request, response) -> {
+
+            int id = Integer.parseInt(request.params("id"));
+            for(int i = 0; i < articulo.getArticulos().size(); i++){
+
+
+                if(articulo.getArticulos().get(i).getId() == id){
+
+                    BlogService.borrarArticulo(articulo.getArticulos().get(i).getId());
+                    articulo.getArticulos().remove(i);
+
+
+                }
+            }
+
+              response.redirect("/Home");
+
+            return null;
+
+        }, freeMarkerEngine);
+
 
         post("/crearUsuario", (request, response) -> {
 
@@ -203,6 +226,8 @@ public class main {
            return null;
 
         }, freeMarkerEngine);
+
+
     }
 }
 

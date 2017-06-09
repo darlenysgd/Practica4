@@ -63,8 +63,15 @@
               <!-- Blog Post -->
 
                 <!-- Title -->
-                <h1>${articulo.titulo}</h1>
+                <div class="row">
+                  <h1>${articulo.titulo}
 
+                  <button class="btn btn-icon"><i class="glyphicon glyphicon-pencil"></i></button>
+
+                  <form action="/eliminarArticulo/${articulo.id}" method="post">
+                    <button class="btn btn-icon"><i class="glyphicon glyphicon-trash"></i></button>
+                  </form>
+                </div>
                 <!-- Author -->
                 <p>
                     by <a href="#">${articulo.autor.nombre}</a>
