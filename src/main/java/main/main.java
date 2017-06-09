@@ -36,8 +36,9 @@ public class main {
         ArrayList<Etiqueta> etiquetas = new ArrayList<>();
 
         Usuario usuario1 = new Usuario("admin", "admin", "admin", true, false);
-       // lista.add(new Articulo("probando la vaina eta", "tu real articulo namah", usuario1, "05-6-17"));
 
+         Articulo arti =   new Articulo("probando la vaina eta", "tu real articulo namah", usuario1, "05-6-17");
+         articulo.getArticulos().add(arti);
       //  comentarios.add(new Comentario(1, "Nice", usuario1, lista.get(0)));
         //comentarios.add(new Comentario(2, "Lol", usuario1, lista.get(0)));
         etiquetas.add(new Etiqueta(1, "etiqueta1"));
@@ -108,6 +109,7 @@ public class main {
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("articulos", articulo.getArticulos());
             return new ModelAndView(attributes, "index.ftl");
+
         }, freeMarkerEngine);
 
         get("/NuevoPost", (request, response) -> {
@@ -129,9 +131,33 @@ public class main {
             attributes.put("articulo", articulo.getArticulos().get(indice));
             attributes.put("comentarios", comentarios);
             attributes.put("etiquetas", etiquetas);
+            attributes.put("indice", indice);
             return new ModelAndView(attributes, "entrada.ftl");
             }, freeMarkerEngine);
 
+
+        get("/modificarArticulo/:indice", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            int indice = Integer.parseInt(request.params("indice"));
+            attributes.put("articulo", articulo.getArticulos().get(indice));
+            attributes.put("indice", indice);
+            return new ModelAndView(attributes, "modificarPost.ftl");
+        }, freeMarkerEngine);
+
+        post("/modificarArticuloForm/:indice", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            int indice = Integer.parseInt(request.params("indice"));
+            String titulo = request.queryParams("titulo");
+            String contenido = request.queryParams("contenido");
+            String fecha = new Date().toString();
+            Articulo art = new Articulo(titulo, contenido, usuario1, fecha);
+            BlogService.crearArticulo(art);
+            articulo.getArticulos().set(indice, art);
+            response.redirect("/Home");
+            return null;
+        }, freeMarkerEngine);
 
 
 

@@ -66,7 +66,10 @@
                 <div class="row">
                   <h1>${articulo.titulo}
 
-                  <button class="btn btn-icon"><i class="glyphicon glyphicon-pencil"></i></button>
+                   <form action="/modificarArticulo/${indice}" method="get">
+                       <button class="btn btn-icon"><i class="glyphicon glyphicon-pencil"></i></button>
+                   </form>
+
 
                   <form action="/eliminarArticulo/${articulo.id}" method="post">
                     <button class="btn btn-icon"><i class="glyphicon glyphicon-trash"></i></button>
