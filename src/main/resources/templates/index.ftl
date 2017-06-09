@@ -19,6 +19,7 @@
 
     <link href="css/Estilos.css" rel="stylesheet">
 
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -46,7 +47,7 @@
                         <a href="/NuevoPost"><span class="dorado">Nueva entrada</span></a>
                     </li>
                     <li>
-                        <a href="#"><span class="dorado">Registro</span></a>
+                        <a href="/NuevoUsuario"><span class="dorado">Registro</span></a>
                     </li>
                 </ul>
             </div>
@@ -78,7 +79,14 @@
                     <p><span class="glyphicon glyphicon-time"></span>${art.getFecha()}</p>
                     <hr>
 
-                    <p>${art.getCuerpo()}</p>
+                    <#assign cuerpo=art.getCuerpo()>
+                    <#if cuerpo?length &lt; 70>
+                        ${cuerpo}
+                    <#else>
+                        ${cuerpo?substring(0,70) + "..."}
+                    </#if>
+
+                    <br><br>
                     <a class="btn btn-primary" href="/Entrada/${art_index}">Leer Más<span class="glyphicon glyphicon-chevron-right"></span></a>
 
                     <hr>

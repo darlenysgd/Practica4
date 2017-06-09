@@ -10,7 +10,10 @@ public class Comentario {
     private Usuario autor;
     private Articulo articulo;
 
-    public Comentario(long id, String comentatio, Usuario autor, Articulo articulo) {
+    public Comentario() {
+    }
+
+    public Comentario(String comentatio, Usuario autor, Articulo articulo) {
         this.id = id;
         this.comentatio = comentatio;
         this.autor = autor;

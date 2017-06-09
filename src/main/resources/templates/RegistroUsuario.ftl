@@ -17,13 +17,23 @@
                 <input name="clave"/>
             </div>
             <div class="form-group">
-                <label>Permisos:</label>
-               <input name="permiso1"/>
+                <label class="col-md-4 control-label" for="rolename">Permisos</label>
+                <div class="col-md-4">
+                    <select id="demo-cs-multiselect" data-placeholder="Choose a Country..." multiple tabindex="2">
+                        <option value="cheese">Administrador</option>
+                        <option value="tomatoes">Autor</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Permisos:</label>
-                <input name="permiso2"/>
-            </div>
+
+
+            <script type="text/javascript">
+                $(function() {
+                    $('.multiselect-ui').multiselect({
+                        includeSelectAllOption: true
+                    });
+                });
+            </script>
         </form>
     </div>
 </div>

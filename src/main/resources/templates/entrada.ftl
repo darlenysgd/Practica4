@@ -77,7 +77,7 @@
                 </div>
                 <!-- Author -->
                 <p>
-                    by <a href="#">${articulo.autor.nombre}</a>
+                    by <a href="#">${articulo.autor.username}</a>
                 </p>
 
                 <hr>
@@ -96,11 +96,11 @@
                 <!-- Comments Form -->
                 <div class="well">
                     <h4>Deja un comentario:</h4>
-                    <form role="form">
+                    <form action="/comentar/${articulo.id}" method="post">
                         <div class="form-group">
-                            <textarea class="form-control" rows="3"></textarea>
+                            <textarea class="form-control" name="comentario" rows="3"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Publicar</button>
                     </form>
                 </div>
 
@@ -110,12 +110,17 @@
 
                 <!-- Comment -->
                 <#list comentarios as comentario>
+
+                    <#assign cm=comentario.articulo.id>
+
+            <#if cm == articulo.id>
                 <div class="media">
                         <div class="media-body">
                         <h4 class="media-heading">${comentario.autor.username}</h4>
                         ${comentario.comentatio}
                     </div>
                 </div>
+            </#if>
                 </#list>
 
 

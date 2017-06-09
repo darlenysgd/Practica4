@@ -59,6 +59,44 @@ public class BlogService {
         return lista;
     }
 
+    public static List<Comentario> listaComentarios() {
+        List<Comentario> lista = new ArrayList<>();
+        Connection con = null; //objeto conexion.
+        try {
+
+            String query = "select * from comentario";
+            con = DataBase.getInstancia().getConexion(); //referencia a la conexion.
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            ResultSet rs = prepareStatement.executeQuery();
+            while(rs.next()){
+                Comentario cm = new Comentario();
+                int idArt = rs.getInt("articulo");
+                Articulo art = getArticulo(idArt);
+                String idUsr = rs.getString("usuario");
+                Usuario usr = getAutor(idUsr);
+                cm.setId(rs.getInt("id"));
+                cm.setArticulo(art);
+                cm.setAutor(usr);
+                String comentario = rs.getString("comentario");
+                cm.setComentatio(comentario);
+
+                lista.add(cm);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return lista;
+    }
+
     public static Articulo getArticulo(int id)
     {
 
@@ -209,18 +247,15 @@ public class BlogService {
 
         try {
 
-            String query = "insert into comentario(id, comentario, usuario, articulo) VALUES (?,?,?,?)";
+            String query = "insert into comentario(comentario, usuario, articulo) VALUES (?,?,?)";
 
             con = DataBase.getInstancia().getConexion();
 
             PreparedStatement preparedStatement = con.prepareStatement(query);
 
-            preparedStatement.setLong(1, comentario.getId());
-            preparedStatement.setString(2, comentario.getComentatio());
-            preparedStatement.setObject(3, comentario.getAutor());
-            preparedStatement.setObject(4, comentario.getArticulo());
-
-
+            preparedStatement.setString(1, comentario.getComentatio());
+            preparedStatement.setString(2, comentario.getAutor().getUsername());
+            preparedStatement.setLong(3, comentario.getArticulo().getId());
 
             int fila = preparedStatement.executeUpdate();
 

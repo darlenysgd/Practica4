@@ -26,6 +26,7 @@ public class main {
     static List<Articulo> lista = new ArrayList<>();
     static List<Usuario> listaUsuarios = new ArrayList<>();
 
+
     public static void main(String[] args) {
 
         staticFiles.location("/");
@@ -35,7 +36,7 @@ public class main {
         ArrayList<Comentario> comentarios = new ArrayList<>();
         ArrayList<Etiqueta> etiquetas = new ArrayList<>();
 
-        Usuario usuario1 = new Usuario("admin", "admin", "admin", true, false);
+        Usuario usuario1 = new Usuario("admin", "admin", "admin", true, true);
 
          Articulo arti =   new Articulo("probando la vaina eta", "tu real articulo namah", usuario1, "05-6-17");
          articulo.getArticulos().add(arti);
@@ -77,11 +78,14 @@ public class main {
 
         List<Articulo> listaArticulos = BlogService.listaArticulos();
 
+
+        List<Comentario> listaComentarios = BlogService.listaComentarios();
+
         System.out.println("Cantidad: "+ listaArticulos.size());
 
 
         articulo.setArticulos(listaArticulos);
-
+        listaUsuarios.add(usuario1);
 
 
         before("/NuevoUsuario", (request, response) -> {
@@ -95,7 +99,7 @@ public class main {
         before("/NuevoPost", (request, response) -> {
 
             String str = request.session().attribute("usuario");
-            if ((str == null || !usuario1.isAdministrator()) || (str == null || !usuario1.isAutor())){
+            if (str == null || !usuario1.isAutor()){
                 response.redirect("/login");
             }
         });
@@ -103,7 +107,7 @@ public class main {
 
         before("/NuevoPost", (request, response) -> {
 
-            String str = request.session(true).attribute("usuario");
+            String str = request.session().attribute("usuario");
             if (str == null ){
                 if ((usuario1.getUsername() == str && !usuario1.isAdministrator()) || (usuario1.getUsername() == str && !usuario1.isAutor()) ){
                     response.redirect("/Home");
@@ -137,7 +141,9 @@ public class main {
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
             attributes.put("articulo", articulo.getArticulos().get(indice));
-            attributes.put("comentarios", comentarios);
+            if(comentarios!=null) {
+                attributes.put("comentarios", listaComentarios);
+            }
             attributes.put("etiquetas", etiquetas);
             attributes.put("indice", indice);
             return new ModelAndView(attributes, "entrada.ftl");
@@ -171,11 +177,17 @@ public class main {
 
         post("/crear", (request, response) -> {
 
-
+            String str = request.session().attribute("usuario");
+            Usuario usr = new Usuario();
+            for(Usuario aux: listaUsuarios){
+                if(aux.getUsername().equals(str)){
+                    usr = aux;
+                }
+            }
             String titulo = request.queryParams("titulo");
             String contenido = request.queryParams("contenido");
             String fecha = new Date().toString();
-            Articulo art = new Articulo(titulo, contenido, usuario1, fecha);
+            Articulo art = new Articulo(titulo, contenido, usr, fecha);
             BlogService.crearArticulo(art);
             articulo.getArticulos().add(art);
 
@@ -183,6 +195,39 @@ public class main {
             response.redirect("/Home");
 
             return  null;
+
+        }, freeMarkerEngine);
+
+        post("/comentar/:id", (request, response) -> {
+
+            String str = request.session().attribute("usuario");
+            System.out.println(str);
+            Usuario usr = new Usuario();
+            for(Usuario aux: listaUsuarios){
+                if(aux.getUsername().equals(str)){
+                    usr = aux;
+                }
+            }
+            String comentario = request.queryParams("comentario");
+            int artId = Integer.parseInt(request.params("id"));
+            Articulo art = new Articulo();
+
+            for (Articulo aux : articulo.getArticulos())
+            {
+
+                if(aux.getId() == artId){
+                    art = aux;
+                }
+            }
+
+            Comentario cm = new Comentario(comentario, usr, art);
+            BlogService.crearComentario(cm);
+            listaComentarios.add(cm);
+
+
+            response.redirect("/Home");
+
+            return null;
 
         }, freeMarkerEngine);
 
@@ -209,8 +254,6 @@ public class main {
 
 
         post("/crearUsuario", (request, response) -> {
-
-
 
             int id = 1;
             String titulo = request.queryParams("titulo");
@@ -243,14 +286,14 @@ public class main {
             String Usuario = request.queryParams("Usuario");
             String clave = request.queryParams("password");
 
-            if(usuario1.getUsername().equals(Usuario)){
+            if(usuario1.getUsername().equals(Usuario) && usuario1.getPassword().equals(clave) ){
 
-                if (usuario1.getPassword().equals(clave)){
+
 
                     request.session().attribute("usuario", Usuario);
                     System.out.println(Usuario);
                     response.redirect("/Home");
-                }
+
             }
             else {
 

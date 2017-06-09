@@ -46,7 +46,7 @@ public class BootStrapService {
                 ");" +
                 "\n CREATE TABLE IF NOT EXISTS COMENTARIO" +
                 "(\n" +
-                "ID INTEGER PRIMARY KEY NOT NULL, \n"+
+                "ID INTEGER PRIMARY KEY auto_increment, \n"+
                 "COMENTARIO VARCHAR (1000) NOT NULL, \n" +
                 "USUARIO VARCHAR (50) REFERENCES USUARIO(USERNAME)," +
                 "ARTICULO INTEGER REFERENCES ARTICULO(ID) " +
