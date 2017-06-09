@@ -87,11 +87,19 @@ public class main {
         before("/NuevoUsuario", (request, response) -> {
 
            String str = request.session().attribute("usuario");
-            System.out.println(str);
             if (str == null || !usuario1.isAdministrator()){
-                    response.redirect("/Home");
+                    response.redirect("/login");
             }
         });
+
+        before("/NuevoPost", (request, response) -> {
+
+            String str = request.session().attribute("usuario");
+            if ((str == null || !usuario1.isAdministrator()) || (str == null || !usuario1.isAutor())){
+                response.redirect("/login");
+            }
+        });
+
 
         before("/NuevoPost", (request, response) -> {
 
