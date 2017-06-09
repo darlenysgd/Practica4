@@ -16,13 +16,17 @@
                 <label>Constraseña:</label>
                 <input type="password" class="form-control"name="clave"/>
             </div>
-            <div class="radio">
-                <label><input type="radio" name="administrador">Administrador</label>
-            </div>
-            <div class="radio">
-                <label><input type="radio" name="autor">Autor</label>
+            <div class="form-group">
+                <label for="sel1">Tipo De Usuario:</label>
+                <select class="form-control" id="sel1" name="tipoUsuario">
+                    <option>Administrador</option>
+                    <option>Autor</option>
+                </select>
             </div>
 
+            <div class="form-group">
+                <input type="submit" id="btnSubmit" class="form-control" value="Crear">
+            </div>
             <script type="text/javascript">
                 $(function() {
                     $('.multiselect-ui').multiselect({

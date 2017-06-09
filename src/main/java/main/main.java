@@ -105,16 +105,32 @@ public class main {
         });
 
 
-        before("/NuevoPost", (request, response) -> {
+        before("/comentar/:id", (request, response) -> {
 
             String str = request.session().attribute("usuario");
             if (str == null ){
-                if ((usuario1.getUsername() == str && !usuario1.isAdministrator()) || (usuario1.getUsername() == str && !usuario1.isAutor()) ){
+
                     response.redirect("/Home");
-                }
 
             }
         });
+
+        before("/eliminarArticulo/:id", (request, response) -> {
+
+            String str = request.session().attribute("usuario");
+            if (str == null || !usuario1.isAutor()){
+                response.redirect("/login");
+            }
+        });
+
+        before("/modificarArticulo/:indice", (request, response) -> {
+
+            String str = request.session().attribute("usuario");
+            if (str == null || !usuario1.isAutor()){
+                response.redirect("/login");
+            }
+        });
+
 
         get("/Home", (request, response) -> {
 
@@ -258,17 +274,28 @@ public class main {
 
         post("/crearUsuario", (request, response) -> {
 
-            int id = 1;
-            String titulo = request.queryParams("titulo");
-            String contenido = request.queryParams("contenido");
-            String fecha = new Date().toString();
-            Articulo art = new Articulo(titulo, contenido, usuario1, fecha);
-            lista.add(art);
+            boolean admin= false;
+            boolean author = false;
+            String Nombre = request.queryParams("nombre");
+            String Username = request.queryParams("usuario");
+            String Password = request.queryParams("clave");
+            String TipoUsuario = request.queryParams("tipoUsuario");
+
+            switch (TipoUsuario){
+                case "Administrador":
+                    admin = true;
+                    author = true;
+                    break;
+                case "Autor":
+                    author = true;
+
+            }
+
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("articulos", lista);
 
 
-            return new ModelAndView(attributes, "index.ftl");
+
+            return new ModelAndView(attributes, "RegistroUsuario.ftl");
 
         }, freeMarkerEngine);
 
