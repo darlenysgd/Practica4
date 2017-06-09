@@ -6,26 +6,22 @@
         <form action="/crearUsuario" method="post">
             <div class="form-group">
                 <label>Nombre Completo:</label>
-                <input name="nombre"/>
+                <input type="text" class="form-control" name="nombre"/>
             </div>
             <div class="form-group">
                 <label>Nombre de usuario:</label>
-                <input name="usuario"/>
+                <input type="text" class="form-control" name="usuario"/>
             </div>
             <div class="form-group">
                 <label>Constraseña:</label>
-                <input name="clave"/>
+                <input type="password" class="form-control"name="clave"/>
             </div>
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="rolename">Permisos</label>
-                <div class="col-md-4">
-                    <select id="demo-cs-multiselect" data-placeholder="Choose a Country..." multiple tabindex="2">
-                        <option value="cheese">Administrador</option>
-                        <option value="tomatoes">Autor</option>
-                    </select>
-                </div>
+            <div class="radio">
+                <label><input type="radio" name="administrador">Administrador</label>
             </div>
-
+            <div class="radio">
+                <label><input type="radio" name="autor">Autor</label>
+            </div>
 
             <script type="text/javascript">
                 $(function() {

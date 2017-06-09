@@ -187,7 +187,11 @@ public class main {
             String titulo = request.queryParams("titulo");
             String contenido = request.queryParams("contenido");
             String fecha = new Date().toString();
+            String tags = request.queryParams("etiquetas");
+
             Articulo art = new Articulo(titulo, contenido, usr, fecha);
+            ArrayList<String> listaEtiquetas = new ArrayList<>(Arrays.asList(tags.split(",")));
+
             BlogService.crearArticulo(art);
             articulo.getArticulos().add(art);
 
@@ -242,7 +246,6 @@ public class main {
                     BlogService.borrarArticulo(articulo.getArticulos().get(i).getId());
                     articulo.getArticulos().remove(i);
 
-
                 }
             }
 
@@ -261,10 +264,6 @@ public class main {
             String fecha = new Date().toString();
             Articulo art = new Articulo(titulo, contenido, usuario1, fecha);
             lista.add(art);
-
-
-
-
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("articulos", lista);
 
@@ -283,15 +282,15 @@ public class main {
         post("/loginForm", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
 
-            String Usuario = request.queryParams("Usuario");
+            String NombreDeUsuario = request.queryParams("Usuario");
             String clave = request.queryParams("password");
 
-            if(usuario1.getUsername().equals(Usuario) && usuario1.getPassword().equals(clave) ){
+            if(usuario1.getUsername().equals(NombreDeUsuario)){
 
 
 
-                    request.session().attribute("usuario", Usuario);
-                    System.out.println(Usuario);
+                    request.session().attribute("usuario", NombreDeUsuario);
+                    System.out.println(NombreDeUsuario);
                     response.redirect("/Home");
 
             }

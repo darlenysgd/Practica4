@@ -15,7 +15,7 @@
         </div>
         <div class="form-group">
             <label>Etiquetas: </label>
-            <input class=" form-control"></select>
+            <input class=" form-control" name="etiquetas"></select>
         </div>
         <button name="guardar" type="submit">Guardar</button>
     </form>
