@@ -25,13 +25,14 @@ public class main {
 
     static List<Articulo> lista = new ArrayList<>();
     static List<Usuario> listaUsuarios = new ArrayList<>();
-
+    static boolean logged = false;
 
     public static void main(String[] args) {
 
         staticFiles.location("/");
         Articulo articulo = new Articulo();
         articulo.setArticulos(lista);
+
 
         ArrayList<Comentario> comentarios = new ArrayList<>();
         ArrayList<Etiqueta> etiquetas = new ArrayList<>();
@@ -110,7 +111,8 @@ public class main {
             String str = request.session().attribute("usuario");
             if (str == null ){
 
-                    response.redirect("/Home");
+
+
 
             }
         });
@@ -162,6 +164,7 @@ public class main {
             }
             attributes.put("etiquetas", etiquetas);
             attributes.put("indice", indice);
+            attributes.put("logged", logged);
             return new ModelAndView(attributes, "entrada.ftl");
             }, freeMarkerEngine);
 
@@ -319,6 +322,7 @@ public class main {
                     request.session().attribute("usuario", NombreDeUsuario);
                     System.out.println(NombreDeUsuario);
                     response.redirect("/Home");
+                    logged = true;
 
             }
             else {
@@ -329,6 +333,14 @@ public class main {
            return null;
 
         }, freeMarkerEngine);
+
+        get("/cerrarSesion", (request, response) -> {
+
+            request.session().invalidate();
+            logged = false;
+            response.redirect("/Home");
+            return null;}, freeMarkerEngine );
+
 
 
     }

@@ -94,6 +94,7 @@
                 <!-- Blog Comments -->
 
                 <!-- Comments Form -->
+            <#if logged>
                 <div class="well">
                     <h4>Deja un comentario:</h4>
                     <form action="/comentar/${articulo.id}" method="post">
@@ -103,7 +104,7 @@
                         <button type="submit" class="btn btn-primary">Publicar</button>
                     </form>
                 </div>
-
+                   </#if>
                 <hr>
 
                 <!-- Posted Comments -->

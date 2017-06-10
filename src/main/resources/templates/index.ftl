@@ -49,6 +49,9 @@
                     <li>
                         <a href="/NuevoUsuario"><span class="dorado">Registro</span></a>
                     </li>
+                    <li>
+                        <a href="/cerrarSesion"><span class="dorado">Cerrar Sesion</span></a>
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
