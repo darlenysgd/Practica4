@@ -18,7 +18,7 @@ public class Articulo implements Serializable {
     private Usuario autor;
     private String fecha;
     private ArrayList<Comentario> comentarios;
-    private ArrayList<Etiqueta> etiquetas;
+    private List<Etiqueta> etiquetas;
     private List<Articulo> articulos;
 
     public Articulo(String titulo, String cuerpo, Usuario autor, String fecha) {
@@ -80,11 +80,11 @@ public class Articulo implements Serializable {
         this.comentarios = comentarios;
     }
 
-    public ArrayList<Etiqueta> getEtiquetas() {
+    public List<Etiqueta> getEtiquetas() {
         return etiquetas;
     }
 
-    public void setEtiquetas(ArrayList<Etiqueta> etiquetas) {
+    public void setEtiquetas(List<Etiqueta> etiquetas) {
         this.etiquetas = etiquetas;
     }
 

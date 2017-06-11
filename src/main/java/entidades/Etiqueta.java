@@ -8,8 +8,10 @@ public class Etiqueta {
     private long id;
     private String etiqueta;
 
-    public Etiqueta(long id, String etiqueta) {
-        this.id = id;
+    public Etiqueta() {
+    }
+
+    public Etiqueta(String etiqueta) {
         this.etiqueta = etiqueta;
     }
 

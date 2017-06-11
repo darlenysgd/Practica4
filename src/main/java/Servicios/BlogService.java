@@ -64,6 +64,7 @@ public class BlogService {
         Connection con = null; //objeto conexion.
         try {
 
+
             String query = "select * from comentario";
             con = DataBase.getInstancia().getConexion(); //referencia a la conexion.
             //
@@ -82,6 +83,38 @@ public class BlogService {
                 cm.setComentatio(comentario);
 
                 lista.add(cm);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return lista;
+    }
+
+    public static List<Etiqueta> listaEtiquetas() {
+        List<Etiqueta> lista = new ArrayList<>();
+        Connection con = null; //objeto conexion.
+        try {
+
+            String query = "select * from etiqueta";
+            con = DataBase.getInstancia().getConexion(); //referencia a la conexion.
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            ResultSet rs = prepareStatement.executeQuery();
+            while(rs.next()){
+                Etiqueta etq = new Etiqueta();
+
+                etq.setId(rs.getInt("id"));
+                etq.setEtiqueta(rs.getString("nombre"));
+
+                lista.add(etq);
             }
 
         } catch (SQLException ex) {
@@ -175,6 +208,42 @@ public class BlogService {
         }
 
         return usr;
+    }
+
+    public static Etiqueta getEtiqueta(int id)
+    {
+
+        Etiqueta etq = null;
+        Connection con = null;
+
+        try {
+            String query = "SELECT * FROM etiqueta WHERE id = ?";
+            con = DataBase.getInstancia().getConexion();
+
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+
+            preparedStatement.setInt(1, id);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+
+                etq = new Etiqueta();
+                etq.setId(rs.getLong("id"));
+                etq.setEtiqueta(rs.getString("nombre"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return etq;
     }
 
     public static boolean crearArticulo(Articulo art)
@@ -276,14 +345,13 @@ public class BlogService {
 
         try {
 
-            String query = "insert into etiqueta(id, nombre) VALUES (?,?)";
+            String query = "insert into etiqueta(nombre) VALUES (?)";
 
             con = DataBase.getInstancia().getConexion();
 
             PreparedStatement preparedStatement = con.prepareStatement(query);
 
-            preparedStatement.setLong(1, etq.getId());
-            preparedStatement.setString(2, etq.getEtiqueta());
+            preparedStatement.setString(1, etq.getEtiqueta());
 
 
 
@@ -335,6 +403,40 @@ public class BlogService {
         try{
 
             String query = "delete from articulo where id = ?";
+
+            con = DataBase.getInstancia().getConexion();
+
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+
+            preparedStatement.setLong(1,id);
+
+            int fila= preparedStatement.executeUpdate();
+
+            ok = fila > 0;
+
+        }  catch (SQLException ex) {
+            Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+
+        return ok;
+    }
+
+    public static boolean borrarComentario(long id){
+
+        boolean ok = false;
+
+        Connection con = null;
+
+        try{
+
+            String query = "delete from comentario where id = ?";
 
             con = DataBase.getInstancia().getConexion();
 

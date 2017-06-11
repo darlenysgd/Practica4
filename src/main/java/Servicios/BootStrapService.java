@@ -53,7 +53,7 @@ public class BootStrapService {
                 ");" +
                 "\n CREATE TABLE IF NOT EXISTS ETIQUETA" +
                 "(\n" +
-                "ID INTEGER PRIMARY KEY NOT NULL," +
+                "ID INTEGER PRIMARY KEY auto_increment \n," +
                 "NOMBRE VARCHAR (20) NOT NULL" +
                  ");" +
                 "\n CREATE TABLE IF NOT EXISTS ETIQUETA_ARTICULO" +

@@ -34,6 +34,8 @@
                     });
                 });
             </script>
+
+            <button class="btn" type="submit">Guardar</button>
         </form>
     </div>
 </div>

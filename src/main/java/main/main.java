@@ -25,7 +25,9 @@ public class main {
 
     static List<Articulo> lista = new ArrayList<>();
     static List<Usuario> listaUsuarios = new ArrayList<>();
+    static List<Etiqueta> listaEtiquetas;
     static boolean logged = false;
+    static List<Comentario> listaComentarios = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -39,12 +41,13 @@ public class main {
 
         Usuario usuario1 = new Usuario("admin", "admin", "admin", true, true);
 
+
          Articulo arti =   new Articulo("probando la vaina eta", "tu real articulo namah", usuario1, "05-6-17");
          articulo.getArticulos().add(arti);
       //  comentarios.add(new Comentario(1, "Nice", usuario1, lista.get(0)));
         //comentarios.add(new Comentario(2, "Lol", usuario1, lista.get(0)));
-        etiquetas.add(new Etiqueta(1, "etiqueta1"));
-        etiquetas.add(new Etiqueta(2, "etiqueta2"));
+        //etiquetas.add(new Etiqueta(1, "etiqueta1"));
+        //etiquetas.add(new Etiqueta(2, "etiqueta2"));
 
 
         Configuration configuration=new Configuration(Configuration.VERSION_2_3_23);
@@ -64,11 +67,6 @@ public class main {
         }
 
 
-
-
-
-
-
         for(int i = 0; i < lista.size(); i++) {
             if (BlogService.getAutor(lista.get(i).getAutor().getUsername()) == null) {
                 BlogService.crearUsuario(lista.get(i).getAutor());
@@ -80,7 +78,9 @@ public class main {
         List<Articulo> listaArticulos = BlogService.listaArticulos();
 
 
-        List<Comentario> listaComentarios = BlogService.listaComentarios();
+        listaComentarios = BlogService.listaComentarios();
+
+        listaEtiquetas = BlogService.listaEtiquetas();
 
         System.out.println("Cantidad: "+ listaArticulos.size());
 
@@ -162,7 +162,7 @@ public class main {
             if(comentarios!=null) {
                 attributes.put("comentarios", listaComentarios);
             }
-            attributes.put("etiquetas", etiquetas);
+            attributes.put("etiquetas", listaEtiquetas);
             attributes.put("indice", indice);
             attributes.put("logged", logged);
             return new ModelAndView(attributes, "entrada.ftl");
@@ -209,7 +209,28 @@ public class main {
             String tags = request.queryParams("etiquetas");
 
             Articulo art = new Articulo(titulo, contenido, usr, fecha);
-            ArrayList<String> listaEtiquetas = new ArrayList<>(Arrays.asList(tags.split(",")));
+
+            ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
+            List<Etiqueta> aux = new ArrayList<>();
+
+            for(int i = 0; i < listaEtiquetas1.size(); i++){
+
+                for(int j = 0; i < listaEtiquetas.size(); j++) {
+                    if(listaEtiquetas1.get(i).equalsIgnoreCase(listaEtiquetas.get(j).getEtiqueta())) {
+
+                        aux.add(listaEtiquetas.get(j));
+                        BlogService.crearEtiqueta_Articulo(listaEtiquetas.get(j), art);
+                        System.out.println(aux.get(0).getEtiqueta());
+                    }
+                    else{
+                        Etiqueta etq = new Etiqueta(listaEtiquetas1.get(i));
+                        aux.add(etq);
+                        listaEtiquetas.add(etq);
+                        BlogService.crearEtiqueta(etq);
+                    }
+                }
+            }
+            art.setEtiquetas(aux);
 
             BlogService.crearArticulo(art);
             articulo.getArticulos().add(art);
@@ -257,17 +278,29 @@ public class main {
         post("/eliminarArticulo/:id", (request, response) -> {
 
             int id = Integer.parseInt(request.params("id"));
-            for(int i = 0; i < articulo.getArticulos().size(); i++){
+
+            for(Comentario cm : listaComentarios){
+
+                if(cm.getId() == id){
+
+                    BlogService.borrarComentario(cm.getId());
+                    listaComentarios.remove(cm);
+
+                }
+            }
+
+     /*       for(int i = 0; i < articulo.getArticulos().size(); i++){
 
 
                 if(articulo.getArticulos().get(i).getId() == id){
+
 
                     BlogService.borrarArticulo(articulo.getArticulos().get(i).getId());
                     articulo.getArticulos().remove(i);
 
                 }
             }
-
+*/
               response.redirect("/Home");
 
             return null;
@@ -307,8 +340,6 @@ public class main {
 
             return new ModelAndView(attributes, "login.ftl");
                 }, freeMarkerEngine );
-
-
         post("/loginForm", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
 
@@ -319,10 +350,10 @@ public class main {
 
 
 
-                    request.session().attribute("usuario", NombreDeUsuario);
-                    System.out.println(NombreDeUsuario);
-                    response.redirect("/Home");
-                    logged = true;
+                request.session().attribute("usuario", NombreDeUsuario);
+                System.out.println(NombreDeUsuario);
+                response.redirect("/Home");
+                logged = true;
 
             }
             else {
@@ -330,10 +361,9 @@ public class main {
                 response.redirect("/login");
             }
 
-           return null;
+            return null;
 
         }, freeMarkerEngine);
-
         get("/cerrarSesion", (request, response) -> {
 
             request.session().invalidate();

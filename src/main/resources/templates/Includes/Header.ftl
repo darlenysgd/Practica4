@@ -20,15 +20,6 @@
     <link href="/css/Estilos.css" rel="stylesheet">
 
     <link href="/css/multiSelect.css" rel="stylesheet">
-
-    <script src="/js/multiSelect.js"></script>
-
-    <link href="/css/nifty.min.css" rel="stylesheet">
-    <link href="/plugins/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
-    <link href="/plugins/select2/css/select2.min.css" rel="stylesheet">
-    <link href="/plugins/chosen/chosen.min.css" rel="stylesheet">
-    <script src="/js/jquery-2.2.4.min.js"></script>
-    <script src="/js/nifty.min.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
