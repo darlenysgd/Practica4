@@ -130,6 +130,41 @@ public class BlogService {
         return lista;
     }
 
+    public static List<Usuario> listaUsuarios() {
+        List<Usuario> lista = new ArrayList<>();
+        Connection con = null; //objeto conexion.
+        try {
+
+            String query = "select * from usuario";
+            con = DataBase.getInstancia().getConexion(); //referencia a la conexion.
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            ResultSet rs = prepareStatement.executeQuery();
+            while(rs.next()){
+                Usuario usr = new Usuario();
+
+                usr.setUsername(rs.getString("username"));
+                usr.setNombre(rs.getString("nombre"));
+                usr.setPassword(rs.getString("password"));
+                usr.setAdministrator(rs.getBoolean("administrador"));
+                usr.setAutor(rs.getBoolean("autor"));
+
+                lista.add(usr);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BlogService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return lista;
+    }
+
     public static Articulo getArticulo(int id)
     {
 
@@ -352,8 +387,6 @@ public class BlogService {
             PreparedStatement preparedStatement = con.prepareStatement(query);
 
             preparedStatement.setString(1, etq.getEtiqueta());
-
-
 
             int fila = preparedStatement.executeUpdate();
 

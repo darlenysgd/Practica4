@@ -14,7 +14,7 @@
             </div>
             <div class="form-group">
                 <label>Constraseña:</label>
-                <input type="password" class="form-control"name="clave"/>
+                <input type="password" class="form-control" name="clave"/>
             </div>
             <div class="form-group">
                 <label for="sel1">Tipo De Usuario:</label>

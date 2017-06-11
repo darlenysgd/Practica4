@@ -27,6 +27,7 @@ public class main {
     static List<Usuario> listaUsuarios = new ArrayList<>();
     static List<Etiqueta> listaEtiquetas;
     static boolean logged = false;
+    static Usuario usuario1 = new Usuario();
     static List<Comentario> listaComentarios = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -39,12 +40,10 @@ public class main {
         ArrayList<Comentario> comentarios = new ArrayList<>();
         ArrayList<Etiqueta> etiquetas = new ArrayList<>();
 
-        Usuario usuario1 = new Usuario("admin", "admin", "admin", true, true);
 
 
-         Articulo arti =   new Articulo("probando la vaina eta", "tu real articulo namah", usuario1, "05-6-17");
-         articulo.getArticulos().add(arti);
-      //  comentarios.add(new Comentario(1, "Nice", usuario1, lista.get(0)));
+
+         //  comentarios.add(new Comentario(1, "Nice", usuario1, lista.get(0)));
         //comentarios.add(new Comentario(2, "Lol", usuario1, lista.get(0)));
         //etiquetas.add(new Etiqueta(1, "etiqueta1"));
         //etiquetas.add(new Etiqueta(2, "etiqueta2"));
@@ -82,11 +81,11 @@ public class main {
 
         listaEtiquetas = BlogService.listaEtiquetas();
 
-        System.out.println("Cantidad: "+ listaArticulos.size());
+        listaUsuarios = BlogService.listaUsuarios();
 
 
         articulo.setArticulos(listaArticulos);
-        listaUsuarios.add(usuario1);
+
 
 
         before("/NuevoUsuario", (request, response) -> {
@@ -327,6 +326,10 @@ public class main {
 
             }
 
+            Usuario usr = new Usuario(Username,Nombre,Password,admin,author);
+            BlogService.crearUsuario(usr);
+            listaUsuarios.add(usr);
+
             Map<String, Object> attributes = new HashMap<>();
 
 
@@ -345,31 +348,34 @@ public class main {
 
             String NombreDeUsuario = request.queryParams("Usuario");
             String clave = request.queryParams("password");
+            int aux = 0;
+          for(Usuario usr : listaUsuarios) {
+              if (usr.getUsername().equals(NombreDeUsuario) && usr.getPassword().equals(clave)) {
 
-            if(usuario1.getUsername().equals(NombreDeUsuario)){
+                    aux ++;
+                  request.session().attribute("usuario", NombreDeUsuario);
+                  System.out.println(NombreDeUsuario);
+                  response.redirect("/Home");
+                  usuario1 = usr;
+                  logged = true;
+                  break;
 
+              } if(aux==0) {
 
+                  response.redirect("/login");
+              }
+          }
+              return null;
 
-                request.session().attribute("usuario", NombreDeUsuario);
-                System.out.println(NombreDeUsuario);
-                response.redirect("/Home");
-                logged = true;
-
-            }
-            else {
-
-                response.redirect("/login");
-            }
-
-            return null;
-
-        }, freeMarkerEngine);
+           }, freeMarkerEngine);
         get("/cerrarSesion", (request, response) -> {
 
             request.session().invalidate();
             logged = false;
+            usuario1 = null;
             response.redirect("/Home");
-            return null;}, freeMarkerEngine );
+            return null;
+            }, freeMarkerEngine );
 
 
 
