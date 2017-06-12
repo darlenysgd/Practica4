@@ -213,6 +213,7 @@ public class main {
             List<Etiqueta> aux = new ArrayList<>();
 
 
+
             BlogService.crearArticulo(art);
             articulo.getArticulos().add(art);
 
@@ -260,9 +261,9 @@ public class main {
 
             int id = Integer.parseInt(request.params("id"));
 
-            for(Comentario cm : listaComentarios){
+           for(Comentario cm : listaComentarios){
 
-                if(cm.getId() == id){
+                if(cm.getArticulo().getId() == id){
 
                     BlogService.borrarComentario(cm.getId());
                     listaComentarios.remove(cm);
@@ -270,7 +271,7 @@ public class main {
                 }
             }
 
-     /*       for(int i = 0; i < articulo.getArticulos().size(); i++){
+           for(int i = 0; i < articulo.getArticulos().size(); i++){
 
 
                 if(articulo.getArticulos().get(i).getId() == id){
@@ -281,7 +282,7 @@ public class main {
 
                 }
             }
-*/
+
               response.redirect("/Home");
 
             return null;
