@@ -212,24 +212,6 @@ public class main {
             ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
             List<Etiqueta> aux = new ArrayList<>();
 
-            for(int i = 0; i < listaEtiquetas1.size(); i++){
-
-                for(int j = 0; i < listaEtiquetas.size(); j++) {
-                    if(listaEtiquetas1.get(i).equalsIgnoreCase(listaEtiquetas.get(j).getEtiqueta())) {
-
-                        aux.add(listaEtiquetas.get(j));
-                        BlogService.crearEtiqueta_Articulo(listaEtiquetas.get(j), art);
-                        System.out.println(aux.get(0).getEtiqueta());
-                    }
-                    else{
-                        Etiqueta etq = new Etiqueta(listaEtiquetas1.get(i));
-                        aux.add(etq);
-                        listaEtiquetas.add(etq);
-                        BlogService.crearEtiqueta(etq);
-                    }
-                }
-            }
-            art.setEtiquetas(aux);
 
             BlogService.crearArticulo(art);
             articulo.getArticulos().add(art);
@@ -349,22 +331,22 @@ public class main {
             String NombreDeUsuario = request.queryParams("Usuario");
             String clave = request.queryParams("password");
             int aux = 0;
-          for(Usuario usr : listaUsuarios) {
+             for(Usuario usr : listaUsuarios) {
               if (usr.getUsername().equals(NombreDeUsuario) && usr.getPassword().equals(clave)) {
-
-                    aux ++;
+                  aux = 1;
                   request.session().attribute("usuario", NombreDeUsuario);
                   System.out.println(NombreDeUsuario);
                   response.redirect("/Home");
                   usuario1 = usr;
                   logged = true;
                   break;
-
-              } if(aux==0) {
-
-                  response.redirect("/login");
               }
-          }
+             }
+
+              if (aux == 1){
+              response.redirect("/login");
+             }
+
               return null;
 
            }, freeMarkerEngine);
