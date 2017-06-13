@@ -137,7 +137,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                           <#list etiquetas as etiqueta>
-                             <a href="#" ><! -- ${etiqueta.etiqueta} --></a>
+                             <a href="#" > ${etiqueta.etiqueta} </a>
                           </#list>
                         </div>
                        </div>

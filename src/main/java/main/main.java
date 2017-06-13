@@ -161,6 +161,7 @@ public class main {
             if(comentarios!=null) {
                 attributes.put("comentarios", listaComentarios);
             }
+
             attributes.put("etiquetas", listaEtiquetas);
             attributes.put("indice", indice);
             attributes.put("logged", logged);
@@ -212,8 +213,17 @@ public class main {
             ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
             List<Etiqueta> aux = new ArrayList<>();
 
+            Etiqueta x ;
+            for(int i = 0; i < listaEtiquetas1.size(); i++){
 
+                x = new Etiqueta(listaEtiquetas1.get(i));
+                System.out.println(x.getEtiqueta());
+                BlogService.crearEtiqueta(x);
+                aux.add(x);
+                listaEtiquetas = BlogService.listaEtiquetas();
+            }
 
+            art.setEtiquetas(aux);
             BlogService.crearArticulo(art);
             articulo.getArticulos().add(art);
 
