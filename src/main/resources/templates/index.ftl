@@ -30,7 +30,6 @@
 </head>
 
 <body>
-
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top topbar" role="navigation">
         <div class="container">
@@ -95,6 +94,7 @@
                     <hr>
 
                 </#list>
+                <nav style="float:right;">
 
             </div>
 

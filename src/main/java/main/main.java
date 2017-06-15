@@ -109,12 +109,27 @@ public class main {
 
             String str = request.session().attribute("usuario");
             if (str == null ){
-
-
-
-
+                response.redirect("/login");
             }
         });
+
+
+        before("/like/:id", (request, response) -> {
+
+            String str = request.session().attribute("usuario");
+            if (str == null ){
+                response.redirect("/login");
+            }
+        });
+
+        before("/dislike/:id", (request, response) -> {
+
+            String str = request.session().attribute("usuario");
+            if (str == null ){
+                response.redirect("/login");
+            }
+        });
+
 
         before("/eliminarArticulo/:id", (request, response) -> {
 
@@ -141,6 +156,21 @@ public class main {
 
         }, freeMarkerEngine);
 
+
+        get("/tags/:indice", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            int indice = Integer.parseInt(request.params("indice"));
+
+            etiquetas.get(indice);
+            //buscar todos los articulos que contengan esa etiqueta y generar una lista
+
+            attributes.put("articulos", articulo.getArticulos());
+            return new ModelAndView(attributes, "index.ftl");
+
+        }, freeMarkerEngine);
+
+
         get("/NuevoPost", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
@@ -165,6 +195,9 @@ public class main {
             attributes.put("etiquetas", listaEtiquetas);
             attributes.put("indice", indice);
             attributes.put("logged", logged);
+            if (usuario1.isAutor()){
+                attributes.put("autor", true);
+            }
             return new ModelAndView(attributes, "entrada.ftl");
             }, freeMarkerEngine);
 
@@ -193,6 +226,23 @@ public class main {
         }, freeMarkerEngine);
 
 
+        post("/like/:indice", (request, response) ->{
+            Map<String, Object> attributes = new HashMap<>();
+            int indice = Integer.parseInt(request.params("indice"));
+            articulo.getArticulos().get(indice).setLikes(articulo.getArticulos().get(indice).getLikes()+1);
+
+            response.redirect("/Entrada/:" + indice);
+            return null;
+        }, freeMarkerEngine);
+
+        post("/dislike/:indice", (request, response) ->{
+            Map<String, Object> attributes = new HashMap<>();
+            int indice = Integer.parseInt(request.params("indice"));
+            articulo.getArticulos().get(indice).setDislikes(articulo.getArticulos().get(indice).getDislikes()+1);
+
+            response.redirect("/Entrada/:" + indice);
+            return null;
+        }, freeMarkerEngine);
 
         post("/crear", (request, response) -> {
 
