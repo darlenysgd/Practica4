@@ -1,0 +1,5 @@
+<root>
+    <item name='javax.persistence.ManyToMany'>
+        <annotation name='java.lang.Deprecated'/>
+    </item>
+</root>

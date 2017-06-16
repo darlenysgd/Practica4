@@ -42,7 +42,7 @@
             <div class="collapse navbar-collapse topbar" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#"><span class="dorado">Inicio</span></a>
+                        <a href="/Home"><span class="dorado">Inicio</span></a>
                     </li>
                     <li>
                         <a href="#"><span class="dorado">Nueva entrada</span></a>

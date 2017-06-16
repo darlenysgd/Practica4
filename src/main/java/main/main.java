@@ -1,8 +1,6 @@
 package main;
 
-import Servicios.BlogService;
-import Servicios.BootStrapService;
-import Servicios.DataBase;
+import Servicios.*;
 import entidades.Comentario;
 import entidades.Etiqueta;
 import entidades.Usuario;
@@ -34,19 +32,11 @@ public class main {
 
         staticFiles.location("/");
         Articulo articulo = new Articulo();
-        articulo.setArticulos(lista);
+
 
 
         ArrayList<Comentario> comentarios = new ArrayList<>();
         ArrayList<Etiqueta> etiquetas = new ArrayList<>();
-
-
-
-
-         //  comentarios.add(new Comentario(1, "Nice", usuario1, lista.get(0)));
-        //comentarios.add(new Comentario(2, "Lol", usuario1, lista.get(0)));
-        //etiquetas.add(new Etiqueta(1, "etiqueta1"));
-        //etiquetas.add(new Etiqueta(2, "etiqueta2"));
 
 
         Configuration configuration=new Configuration(Configuration.VERSION_2_3_23);
@@ -54,17 +44,10 @@ public class main {
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine(configuration);
 
 
-
-        try {
-            BootStrapService.startDb();
-            DataBase.getInstancia().testConexion();
-            BootStrapService.crearTablas();
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        usuario1 = new Usuario("admin", "", "admin", true, true);
+        BootStrapService.getInstancia().init();
+        listaUsuarios.add(usuario1);
+/*
 
         for(int i = 0; i < lista.size(); i++) {
             if (BlogService.getAutor(lista.get(i).getAutor().getUsername()) == null) {
@@ -82,11 +65,13 @@ public class main {
         listaEtiquetas = BlogService.listaEtiquetas();
 
         listaUsuarios = BlogService.listaUsuarios();
+*/
+
+       // articulo.setArticulos(listaArticulos);
 
 
-        articulo.setArticulos(listaArticulos);
-
-
+       listaUsuarios = UsuariosServices.getInstancia().findAll();
+       lista = ArticuloServices.getInstancia().findAll();
 
         before("/NuevoUsuario", (request, response) -> {
 
@@ -109,8 +94,6 @@ public class main {
 
             String str = request.session().attribute("usuario");
             if (str == null ){
-
-
 
 
             }
@@ -136,7 +119,7 @@ public class main {
         get("/Home", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("articulos", articulo.getArticulos());
+            attributes.put("articulos", lista);
             return new ModelAndView(attributes, "index.ftl");
 
         }, freeMarkerEngine);
@@ -153,7 +136,7 @@ public class main {
             return new ModelAndView(attributes, "RegistroUsuario.ftl");
         }, freeMarkerEngine);
 
-        get("/Entrada/:indice", (request, response) -> {
+       /* get("/Entrada/:indice", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
@@ -168,8 +151,8 @@ public class main {
             return new ModelAndView(attributes, "entrada.ftl");
             }, freeMarkerEngine);
 
-
-        get("/modificarArticulo/:indice", (request, response) -> {
+*/
+      /*  get("/modificarArticulo/:indice", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
@@ -178,7 +161,8 @@ public class main {
             return new ModelAndView(attributes, "modificarPost.ftl");
         }, freeMarkerEngine);
 
-        post("/modificarArticuloForm/:indice", (request, response) -> {
+*/
+      /*  post("/modificarArticuloForm/:indice", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
@@ -192,10 +176,11 @@ public class main {
             return null;
         }, freeMarkerEngine);
 
-
+*/
 
         post("/crear", (request, response) -> {
 
+            Articulo art = new Articulo();
             String str = request.session().attribute("usuario");
             Usuario usr = new Usuario();
             for(Usuario aux: listaUsuarios){
@@ -203,12 +188,14 @@ public class main {
                     usr = aux;
                 }
             }
-            String titulo = request.queryParams("titulo");
-            String contenido = request.queryParams("contenido");
+            art.setTitulo(request.queryParams("titulo"));
+            art.setCuerpo(request.queryParams("contenido"));
             String fecha = new Date().toString();
+            art.setFecha(fecha);
+            art.setAutor(usr);
             String tags = request.queryParams("etiquetas");
 
-            Articulo art = new Articulo(titulo, contenido, usr, fecha);
+
 
             ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
             List<Etiqueta> aux = new ArrayList<>();
@@ -217,15 +204,15 @@ public class main {
             for(int i = 0; i < listaEtiquetas1.size(); i++){
 
                 x = new Etiqueta(listaEtiquetas1.get(i));
-                System.out.println(x.getEtiqueta());
-                BlogService.crearEtiqueta(x);
+                EtiquetaServices.getInstancia().crear(x);
                 aux.add(x);
-                listaEtiquetas = BlogService.listaEtiquetas();
+              //  listaEtiquetas = BlogService.listaEtiquetas();
             }
 
             art.setEtiquetas(aux);
-            BlogService.crearArticulo(art);
-            articulo.getArticulos().add(art);
+            ArticuloServices.getInstancia().crear(art);
+            //BlogService.crearArticulo(art);
+           // articulo.getArticulos().add(art);
 
 
             response.redirect("/Home");
@@ -234,7 +221,7 @@ public class main {
 
         }, freeMarkerEngine);
 
-        post("/comentar/:id", (request, response) -> {
+       /* post("/comentar/:id", (request, response) -> {
 
             String str = request.session().attribute("usuario");
             System.out.println(str);
@@ -266,8 +253,8 @@ public class main {
             return null;
 
         }, freeMarkerEngine);
-
-        post("/eliminarArticulo/:id", (request, response) -> {
+*/
+      /*  post("/eliminarArticulo/:id", (request, response) -> {
 
             int id = Integer.parseInt(request.params("id"));
 
@@ -299,33 +286,32 @@ public class main {
 
         }, freeMarkerEngine);
 
-
+*/
         post("/crearUsuario", (request, response) -> {
 
-            boolean admin= false;
-            boolean author = false;
-            String Nombre = request.queryParams("nombre");
-            String Username = request.queryParams("usuario");
-            String Password = request.queryParams("clave");
+            Usuario usr = new Usuario();
+            usr.setUsername(request.queryParams("usuario"));
+            usr.setNombre(request.queryParams("nombre"));
+            usr.setPassword(request.queryParams("clave"));
             String TipoUsuario = request.queryParams("tipoUsuario");
 
             switch (TipoUsuario){
                 case "Administrador":
-                    admin = true;
-                    author = true;
+                    usr.setAdministrator(true);
+                    usr.setAutor(true);
                     break;
                 case "Autor":
-                    author = true;
-
+                    usr.setAutor(true);
+                    usr.setAdministrator(false);
             }
 
-            Usuario usr = new Usuario(Username,Nombre,Password,admin,author);
-            BlogService.crearUsuario(usr);
+
+
+            UsuariosServices.getInstancia().crear(usr);
+
             listaUsuarios.add(usr);
 
             Map<String, Object> attributes = new HashMap<>();
-
-
 
             return new ModelAndView(attributes, "RegistroUsuario.ftl");
 
@@ -336,23 +322,27 @@ public class main {
 
             return new ModelAndView(attributes, "login.ftl");
                 }, freeMarkerEngine );
+
         post("/loginForm", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-
             String NombreDeUsuario = request.queryParams("Usuario");
             String clave = request.queryParams("password");
             int aux = 0;
-             for(Usuario usr : listaUsuarios) {
-              if (usr.getUsername().equals(NombreDeUsuario) && usr.getPassword().equals(clave)) {
-                  aux = 1;
-                  request.session().attribute("usuario", NombreDeUsuario);
-                  System.out.println(NombreDeUsuario);
-                  response.redirect("/Home");
-                  usuario1 = usr;
-                  logged = true;
-                  break;
-              }
-             }
+
+
+            for(Usuario usr : listaUsuarios) {
+
+                if (usr.getUsername().equals(NombreDeUsuario) && usr.getPassword().equals(clave)) {
+                    aux = 1;
+                    request.session().attribute("usuario", NombreDeUsuario);
+                    System.out.println(NombreDeUsuario);
+                    response.redirect("/Home");
+                    usuario1 = usr;
+                    logged = true;
+                    break;
+                }
+
+            }
 
               if (aux == 1){
               response.redirect("/login");

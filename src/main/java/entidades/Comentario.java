@@ -1,14 +1,24 @@
 package entidades;
 
+import javax.persistence.*;
+
 /**
  * Created by darle on 6/3/2017.
  */
+@Entity
 public class Comentario {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
     private String comentatio;
+
+
+    @OneToOne
     private Usuario autor;
+    @OneToOne
     private Articulo articulo;
+
 
     public Comentario() {
     }

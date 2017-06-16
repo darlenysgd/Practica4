@@ -1,19 +1,24 @@
 package entidades;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by darle on 6/3/2017.
  */
+@Entity
 public class Usuario implements Serializable {
 
+    @Id
     private String username;
     private String nombre;
     private String password;
     private boolean administrator;
     private boolean autor;
-    private List<Usuario> usuarios;
 
 
     public Usuario() {
@@ -68,11 +73,5 @@ public class Usuario implements Serializable {
         this.autor = autor;
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
 }
