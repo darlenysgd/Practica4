@@ -66,7 +66,7 @@
             <div class="row">
                 <h1>${articulo.titulo}
 
-                    <#if autor>
+
                     <hr>
                     <div class="row">
                     <div class="col-xs-1">
@@ -82,7 +82,7 @@
                     </div>
                     </div>
                     <hr>
-                </#if>
+
             </div>
             <!-- Author -->
             <p>
@@ -111,7 +111,7 @@
 
             <div class="row">
                 <div class="col-xs-1">
-                    <form action="/like/${indice}" method="get">
+                    <form action="/like/${indice}" method="post">
                         <button class="btn btn-icon"><i class="glyphicon glyphicon-thumbs-up"></i></button>
                     </form>
                 </div>
@@ -138,21 +138,21 @@
 
             <!-- Posted Comments -->
 
-            <!-- Comment -->
-        <#list comentarios as comentario>
+                <!-- Comment -->
+        <#if comentarioNull>
+            <#list comentarios as comentario>
 
-            <#assign cm=comentario.articulo.id>
 
-            <#if cm == articulo.id>
-                <div class="media">
-                    <div class="media-body">
-                        <h4 class="media-heading">${comentario.autor.username}</h4>
+            <div class="media">
+                <div class="media-body">
+                    <h4 class="media-heading">${comentario.autor.username}</h4>
                     ${comentario.comentatio}
-                    </div>
                 </div>
-            </#if>
-        </#list>
+            </div>
 
+            </#list>
+
+        </#if>
 
         </div>
 
@@ -166,8 +166,11 @@
                 <div class="row">
                     <div class="col-lg-4">
                     <#list etiquetas as etiqueta>
-                        <a href="tags/:${etiqueta_index}" > ${etiqueta.etiqueta} </a>
-                    </#list>
+                        <form action="/Home/tags/${etiqueta_index}" method="get">
+
+                            <button class="btn btn-icon">${etiqueta.etiqueta}</button>
+                        </form>
+                              </#list>
                     </div>
                 </div>
             </div>

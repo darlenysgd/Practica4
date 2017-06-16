@@ -71,7 +71,7 @@
                     <small>Práctica #3</small>
                 </h1>
 
-               <#list articulos as art>
+                 <#list articulos as art>
                     <h2>
                         <a href="/Entrada/${art_index}">${art.getTitulo()}</a>
                     </h2>

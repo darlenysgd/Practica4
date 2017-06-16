@@ -18,6 +18,7 @@ public class Articulo implements Serializable {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
     private String titulo;
+    @Column(length = 2000)
     private String cuerpo;
     private String fecha;
     private int likes;
@@ -25,9 +26,9 @@ public class Articulo implements Serializable {
 
     @OneToOne
     private Usuario autor;
-    @ManyToMany
-    private List<Etiqueta> etiquetas;
-    @OneToMany
+    @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+    private List<Etiqueta> etiquetas ;
+    @OneToMany (fetch = FetchType.EAGER)
     private List<Comentario> comentarios;
 
     public Articulo(String titulo, String cuerpo, Usuario autor, String fecha) {
@@ -36,6 +37,7 @@ public class Articulo implements Serializable {
         this.cuerpo = cuerpo;
         this.autor = autor;
         this.fecha = fecha;
+
     }
 
     public Articulo() {

@@ -27,7 +27,7 @@ public class EtiquetaServices extends GestionDB<Etiqueta> {
 
     /**
      *
-     * @param id
+     * @param etiqueta
      * @return
      */
 

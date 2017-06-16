@@ -1,5 +1,7 @@
 package Servicios;
 
+import entidades.Articulo;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Id;
@@ -9,6 +11,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.lang.reflect.Field;
 import java.util.List;
 
+
+
 /**
  * Created by darle on 6/14/2017.
  */
@@ -16,6 +20,7 @@ public class GestionDB<T> {
 
     private static EntityManagerFactory emf;
     private Class<T> claseEntidad;
+
 
 
     public GestionDB(Class<T> claseEntidad) {
@@ -94,39 +99,20 @@ public class GestionDB<T> {
      *
      * @param entidad
      */
-    public void editar(T entidad){
+    public void editar(T entidad) {
         EntityManager em = getEntityManager();
         em.getTransaction().begin();
         try {
             em.merge(entidad);
             em.getTransaction().commit();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             em.getTransaction().rollback();
-            throw  ex;
+            throw ex;
         } finally {
             em.close();
         }
-    }
 
-    /**
-     *
-     * @param entidadId
-     */
-    public void eliminar(Object  entidadId){
-        EntityManager em = getEntityManager();
-        em.getTransaction().begin();
-        try {
-            T entidad = em.find(claseEntidad, entidadId);
-            em.remove(entidad);
-            em.getTransaction().commit();
-        }catch (Exception ex){
-            em.getTransaction().rollback();
-            throw  ex;
-        } finally {
-            em.close();
-        }
     }
-
     /**
      *
      * @param id
@@ -142,6 +128,26 @@ public class GestionDB<T> {
             em.close();
         }
     }
+    /**
+     *
+     * @param entidadId
+     */
+    public void eliminar(Object entidadId){
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        try {
+            T entidad = em.find(claseEntidad, entidadId);
+            em.remove(entidad);
+            em.getTransaction().commit();
+        }catch (Exception ex){
+            em.getTransaction().rollback();
+            throw  ex;
+        } finally {
+            em.close();
+        }
+    }
+
+
 
     /**
      *

@@ -16,18 +16,16 @@ public class Comentario {
 
     @OneToOne
     private Usuario autor;
-    @OneToOne
-    private Articulo articulo;
 
 
     public Comentario() {
     }
 
-    public Comentario(String comentatio, Usuario autor, Articulo articulo) {
+    public Comentario(String comentatio, Usuario autor) {
         this.id = id;
         this.comentatio = comentatio;
         this.autor = autor;
-        this.articulo = articulo;
+
     }
 
     public long getId() {
@@ -54,11 +52,4 @@ public class Comentario {
         this.autor = autor;
     }
 
-    public Articulo getArticulo() {
-        return articulo;
-    }
-
-    public void setArticulo(Articulo articulo) {
-        this.articulo = articulo;
-    }
 }

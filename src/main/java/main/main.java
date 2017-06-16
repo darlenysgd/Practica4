@@ -23,10 +23,12 @@ public class main {
 
     static List<Articulo> lista = new ArrayList<>();
     static List<Usuario> listaUsuarios = new ArrayList<>();
-    static List<Etiqueta> listaEtiquetas;
+    static List<Etiqueta> listaEtiquetas = new ArrayList<>();
     static boolean logged = false;
+    static boolean califico;
     static Usuario usuario1 = new Usuario();
     static List<Comentario> listaComentarios = new ArrayList<>();
+    static int pag = 0;
 
     public static void main(String[] args) {
 
@@ -36,7 +38,7 @@ public class main {
 
 
         ArrayList<Comentario> comentarios = new ArrayList<>();
-        ArrayList<Etiqueta> etiquetas = new ArrayList<>();
+
 
 
         Configuration configuration=new Configuration(Configuration.VERSION_2_3_23);
@@ -48,9 +50,12 @@ public class main {
         BootStrapService.getInstancia().init();
         listaUsuarios.add(usuario1);
 
+       // articulo.setArticulos(listaArticulos);
 
-       listaUsuarios = UsuariosServices.getInstancia().findAll();
-       lista = ArticuloServices.getInstancia().findAll();
+
+        listaUsuarios = UsuariosServices.getInstancia().findAll();
+        lista = ArticuloServices.getInstancia().findAll();
+        listaEtiquetas = EtiquetaServices.getInstancia().findAll();
 
         before("/NuevoUsuario", (request, response) -> {
 
@@ -117,6 +122,7 @@ public class main {
             response.redirect("/HomePage/" + 0);
             return null;
 
+
         }, freeMarkerEngine);
 
         get("/HomePage/:numPag", (request, response) -> {
@@ -139,18 +145,50 @@ public class main {
 
         }, freeMarkerEngine);
 
-
-
-        get("/tags/:indice", (request, response) -> {
+        get("/Home/tags/:indice", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
 
+            response.redirect("/HomePage/tags/" + indice + "/" + 0);
+            return null;
+
+
+        }, freeMarkerEngine);
+
+        get("/HomePage/tags/:indice/:numPag", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            int indice = Integer.parseInt(request.params("indice"));
+            int numPag = Integer.parseInt(request.params("numPag"));
+            int numPagAux = numPag*5;
+            boolean mas = false;
+
+            attributes.put("mas", mas);
+            attributes.put("numPag", numPag);
+
             listaEtiquetas.get(indice);
             //buscar todos los articulos que contengan esa etiqueta y generar una lista
+            List<Articulo> articulos_etq = new ArrayList<>();
 
-            attributes.put("articulos", lista);
-            return new ModelAndView(attributes, "index.ftl");
+            for(Articulo art :  lista){
+                for(Etiqueta et : art.getEtiquetas()){
+
+                    if (et.getEtiqueta().equals(listaEtiquetas.get(indice).getEtiqueta())){
+                        articulos_etq.add(art);
+                    }
+                }
+            }
+
+            if(numPagAux + 5 >  articulos_etq.size() ){
+                ArrayList<Articulo> subLista = new ArrayList<>(articulos_etq.subList(numPagAux, articulos_etq.size()));
+                attributes.put("articulos", subLista);
+            } else{
+                ArrayList<Articulo> subLista = new ArrayList(articulos_etq.subList(numPagAux, numPagAux + 5));
+                attributes.put("articulos", subLista);
+                mas = true;
+            }
+                        return new ModelAndView(attributes, "index.ftl");
 
         }, freeMarkerEngine);
 
@@ -166,68 +204,116 @@ public class main {
             return new ModelAndView(attributes, "RegistroUsuario.ftl");
         }, freeMarkerEngine);
 
-       /* get("/Entrada/:indice", (request, response) -> {
+        get("/Entrada/:indice", (request, response) -> {
 
+            boolean x = true;
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
-            attributes.put("articulo", articulo.getArticulos().get(indice));
-            if(comentarios!=null) {
-                attributes.put("comentarios", listaComentarios);
+            attributes.put("articulo", lista.get(indice));
+            if(lista.get(indice).getComentarios() != null) {
+
+                attributes.put("comentarios", lista.get(indice).getComentarios());
+            }
+            else
+            {
+                x = false;
             }
 
-            attributes.put("etiquetas", listaEtiquetas);
+            attributes.put("comentarioNull", x);
+
+            if(lista.get(indice ).getEtiquetas() != null) {
+
+                attributes.put("etiquetas", lista.get(indice).getEtiquetas());
+            }
+
             attributes.put("indice", indice);
             attributes.put("logged", logged);
-            if (usuario1.isAutor()){
-                attributes.put("autor", true);
-            }
-            return new ModelAndView(attributes, "entrada.ftl");
+             return new ModelAndView(attributes, "entrada.ftl");
             }, freeMarkerEngine);
 
-*/
-      /*  get("/modificarArticulo/:indice", (request, response) -> {
+
+        get("/modificarArticulo/:indice", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
-            attributes.put("articulo", articulo.getArticulos().get(indice));
+            attributes.put("articulo", lista.get(indice));
             attributes.put("indice", indice);
             return new ModelAndView(attributes, "modificarPost.ftl");
         }, freeMarkerEngine);
 
+
         post("/modificarArticuloForm/:indice", (request, response) -> {
 
-            Map<String, Object> attributes = new HashMap<>();
+            Articulo art = new Articulo();
+
             int indice = Integer.parseInt(request.params("indice"));
-            String titulo = request.queryParams("titulo");
-            String contenido = request.queryParams("contenido");
+            art.setId(lista.get(indice).getId());
+
+            art.setTitulo(request.queryParams("titulo"));
+            art.setCuerpo(request.queryParams("contenido"));
             String fecha = new Date().toString();
-            Articulo art = new Articulo(titulo, contenido, usuario1, fecha);
-            BlogService.crearArticulo(art);
-            articulo.getArticulos().set(indice, art);
+            art.setFecha(fecha);
+            art.setAutor(usuario1);
+
+            String tags = request.queryParams("etiquetas");
+
+
+            ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
+            List<Etiqueta> aux = new ArrayList<>();
+
+            Etiqueta x ;
+            for(int i = 0; i < listaEtiquetas1.size(); i++){
+
+                if(EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i))==null){
+                    x = new Etiqueta(listaEtiquetas1.get(i));
+                    EtiquetaServices.getInstancia().crear(x);
+                    aux.add(x);
+                    listaEtiquetas = EtiquetaServices.getInstancia().findAll();
+                }
+                else {
+                    x = EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i));
+                    aux.add(x);
+                }
+            }
+
+            art.setEtiquetas(aux);
+
+            ArticuloServices.getInstancia().editar(art);
+            lista.set(indice, art);
             response.redirect("/Home");
             return null;
         }, freeMarkerEngine);
 
-*/
-
-
         post("/like/:indice", (request, response) ->{
-            Map<String, Object> attributes = new HashMap<>();
-            int indice = Integer.parseInt(request.params("indice"));
-            lista.get(indice).setLikes(lista.get(indice).getLikes()+1);
 
-            response.redirect("/Entrada/:" + indice);
+            int indice = Integer.parseInt(request.params("indice"));
+            if (califico == false) {
+                lista.get(indice).setLikes(lista.get(indice).getLikes() + 1);
+                Articulo art = lista.get(indice);
+                art.setLikes(lista.get(indice).getLikes());
+                ArticuloServices.getInstancia().editar(art);
+                califico = true;
+                //ACTUALIZAR LIKE EN BD
+            }
+            response.redirect("/Entrada/" + indice);
             return null;
         }, freeMarkerEngine);
 
         post("/dislike/:indice", (request, response) ->{
-            Map<String, Object> attributes = new HashMap<>();
-            int indice = Integer.parseInt(request.params("indice"));
-            lista.get(indice).setDislikes(lista.get(indice).getDislikes()+1);
 
-            response.redirect("/Entrada/:" + indice);
+                int indice = Integer.parseInt(request.params("indice"));
+            if (califico == false) {
+                lista.get(indice).setDislikes(lista.get(indice).getDislikes() + 1);
+
+                Articulo art = lista.get(indice);
+                art.setDislikes(lista.get(indice).getDislikes());
+                ArticuloServices.getInstancia().editar(art);
+                califico = true;
+            }
+            response.redirect("/Entrada/" + indice);
             return null;
         }, freeMarkerEngine);
+
 
         post("/crear", (request, response) -> {
 
@@ -254,16 +340,21 @@ public class main {
             Etiqueta x ;
             for(int i = 0; i < listaEtiquetas1.size(); i++){
 
+                if(EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i))==null){
                 x = new Etiqueta(listaEtiquetas1.get(i));
                 EtiquetaServices.getInstancia().crear(x);
                 aux.add(x);
-              //  listaEtiquetas = BlogService.listaEtiquetas();
+                 listaEtiquetas = EtiquetaServices.getInstancia().findAll();
+            }
+            else {
+                    x = EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i));
+                    aux.add(x);
+                }
             }
 
             art.setEtiquetas(aux);
             ArticuloServices.getInstancia().crear(art);
-            //BlogService.crearArticulo(art);
-           // articulo.getArticulos().add(art);
+            lista = ArticuloServices.getInstancia().findAll();
 
 
             response.redirect("/Home");
@@ -272,7 +363,7 @@ public class main {
 
         }, freeMarkerEngine);
 
-       /* post("/comentar/:id", (request, response) -> {
+        post("/comentar/:id", (request, response) -> {
 
             String str = request.session().attribute("usuario");
             System.out.println(str);
@@ -286,17 +377,18 @@ public class main {
             int artId = Integer.parseInt(request.params("id"));
             Articulo art = new Articulo();
 
-            for (Articulo aux : articulo.getArticulos())
-            {
+            for(Articulo x : lista){
 
-                if(aux.getId() == artId){
-                    art = aux;
+                if(x.getId() == artId){
+                    art = x;
                 }
             }
 
-            Comentario cm = new Comentario(comentario, usr, art);
-            BlogService.crearComentario(cm);
-            listaComentarios.add(cm);
+            Comentario cm = new Comentario(comentario, usr);
+            art.getComentarios().add(cm);
+            ComentarioServices.getInstancia().crear(cm);
+            ArticuloServices.getInstancia().editar(art);
+
 
 
             response.redirect("/Home");
@@ -304,32 +396,15 @@ public class main {
             return null;
 
         }, freeMarkerEngine);
-*/
-      /*  post("/eliminarArticulo/:id", (request, response) -> {
+
+        post("/eliminarArticulo/:id", (request, response) -> {
 
             int id = Integer.parseInt(request.params("id"));
 
-           for(Comentario cm : listaComentarios){
+            ArticuloServices.getInstancia().eliminar(id);
 
-                if(cm.getArticulo().getId() == id){
+            lista = ArticuloServices.getInstancia().findAll();
 
-                    BlogService.borrarComentario(cm.getId());
-                    listaComentarios.remove(cm);
-
-                }
-            }
-
-           for(int i = 0; i < articulo.getArticulos().size(); i++){
-
-
-                if(articulo.getArticulos().get(i).getId() == id){
-
-
-                    BlogService.borrarArticulo(articulo.getArticulos().get(i).getId());
-                    articulo.getArticulos().remove(i);
-
-                }
-            }
 
               response.redirect("/Home");
 
@@ -337,7 +412,7 @@ public class main {
 
         }, freeMarkerEngine);
 
-*/
+
         post("/crearUsuario", (request, response) -> {
 
             Usuario usr = new Usuario();
@@ -391,6 +466,7 @@ public class main {
                     response.redirect("/Home");
                     usuario1 = usr;
                     logged = true;
+                    califico = false;
                     break;
                 }
 
