@@ -12,12 +12,12 @@
     <title>Programación Web</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="css/blog-home.css" rel="stylesheet">
+    <link href="/css/blog-home.css" rel="stylesheet">
 
-    <link href="css/Estilos.css" rel="stylesheet">
+    <link href="/css/Estilos.css" rel="stylesheet">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -94,6 +94,18 @@
                     <hr>
 
                 </#list>
+
+                <#if numPag gt 0 >
+                    <form action="/HomePage/${numPag -1 }" method="get">
+                        <button class="btn btn-icon">Anterior</button>
+                    </form>
+
+                </#if>
+                <#if mas>
+                    <form action="/HomePage/${numPag +1 }" method="get">
+                        <button class="btn btn-icon">Siguiente</button>
+                    </form>
+                </#if>
                 <nav style="float:right;">
 
             </div>

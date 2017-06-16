@@ -12,7 +12,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 
 import java.sql.SQLException;
 import java.util.*;
-
+import java.util.Arrays;
 import entidades.Articulo;
 
 import static spark.Spark.*;
@@ -151,10 +151,32 @@ public class main {
         get("/Home", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("articulos", articulo.getArticulos());
+
+            response.redirect("/HomePage/" + 0);
+            return null;
+
+        }, freeMarkerEngine);
+
+        get("/HomePage/:numPag", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            int numPag = Integer.parseInt(request.params("numPag"));
+            int numPagAux = numPag*5;
+            boolean mas = false;
+            if(numPagAux + 5 >  articulo.getArticulos().size() ){
+               ArrayList<Articulo> subLista = new ArrayList<>(articulo.getArticulos().subList(numPagAux, articulo.getArticulos().size()));
+                attributes.put("articulos", subLista);
+            } else{
+                ArrayList<Articulo> subLista = new ArrayList(articulo.getArticulos().subList(numPagAux, numPagAux + 5));
+                attributes.put("articulos", subLista);
+                mas = true;
+            }
+            attributes.put("mas", mas);
+            attributes.put("numPag", numPag);
             return new ModelAndView(attributes, "index.ftl");
 
         }, freeMarkerEngine);
+
 
 
         get("/tags/:indice", (request, response) -> {

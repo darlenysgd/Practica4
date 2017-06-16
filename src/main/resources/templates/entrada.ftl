@@ -65,7 +65,9 @@
             <!-- Title -->
             <div class="row">
                 <h1>${articulo.titulo}
-            <#if autor>
+
+                    <#if autor>
+                    <hr>
                     <div class="row">
                     <div class="col-xs-1">
                     <form action="/modificarArticulo/${indice}" method="get">
@@ -79,6 +81,7 @@
                     </form>
                     </div>
                     </div>
+                    <hr>
                 </#if>
             </div>
             <!-- Author -->
@@ -88,6 +91,10 @@
 
             <hr>
 
+            <p>Likes: ${articulo.getLikes()} Dislikes: ${articulo.getDislikes()}</p>
+
+
+            <hr>
             <!-- Date/Time -->
             <p><span class="glyphicon glyphicon-time"></span> Creado en ${articulo.fecha}</p>
 
@@ -110,7 +117,7 @@
                 </div>
 
                 <div class="col-xs-1">
-                    <form action="/dislike/${articulo.id}" method="post">
+                    <form action="/dislike/${indice}" method="post">
                         <button class="btn btn-icon"><i class="glyphicon glyphicon-thumbs-down"></i></button>
                     </form>
                 </div>
