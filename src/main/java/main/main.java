@@ -10,7 +10,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 
 import java.sql.SQLException;
 import java.util.*;
-
+import java.util.Arrays;
 import entidades.Articulo;
 
 import static spark.Spark.*;
@@ -47,27 +47,6 @@ public class main {
         usuario1 = new Usuario("admin", "", "admin", true, true);
         BootStrapService.getInstancia().init();
         listaUsuarios.add(usuario1);
-/*
-
-        for(int i = 0; i < lista.size(); i++) {
-            if (BlogService.getAutor(lista.get(i).getAutor().getUsername()) == null) {
-                BlogService.crearUsuario(lista.get(i).getAutor());
-            }
-        }
-
-
-
-        List<Articulo> listaArticulos = BlogService.listaArticulos();
-
-
-        listaComentarios = BlogService.listaComentarios();
-
-        listaEtiquetas = BlogService.listaEtiquetas();
-
-        listaUsuarios = BlogService.listaUsuarios();
-*/
-
-       // articulo.setArticulos(listaArticulos);
 
 
        listaUsuarios = UsuariosServices.getInstancia().findAll();
@@ -94,8 +73,23 @@ public class main {
 
             String str = request.session().attribute("usuario");
             if (str == null ){
+                response.redirect("/login");
+            }
+        });
 
+        before("/like/:id", (request, response) -> {
 
+            String str = request.session().attribute("usuario");
+            if (str == null ){
+                response.redirect("/login");
+            }
+        });
+
+        before("/dislike/:id", (request, response) -> {
+
+            String str = request.session().attribute("usuario");
+            if (str == null ){
+                response.redirect("/login");
             }
         });
 
@@ -119,6 +113,42 @@ public class main {
         get("/Home", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
+
+            response.redirect("/HomePage/" + 0);
+            return null;
+
+        }, freeMarkerEngine);
+
+        get("/HomePage/:numPag", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            int numPag = Integer.parseInt(request.params("numPag"));
+            int numPagAux = numPag*5;
+            boolean mas = false;
+            if(numPagAux + 5 >  lista.size() ){
+                ArrayList<Articulo> subLista = new ArrayList<>(lista.subList(numPagAux, lista.size()));
+                attributes.put("articulos", subLista);
+            } else{
+                ArrayList<Articulo> subLista = new ArrayList(lista.subList(numPagAux, numPagAux + 5));
+                attributes.put("articulos", subLista);
+                mas = true;
+            }
+            attributes.put("mas", mas);
+            attributes.put("numPag", numPag);
+            return new ModelAndView(attributes, "index.ftl");
+
+        }, freeMarkerEngine);
+
+
+
+        get("/tags/:indice", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            int indice = Integer.parseInt(request.params("indice"));
+
+            listaEtiquetas.get(indice);
+            //buscar todos los articulos que contengan esa etiqueta y generar una lista
+
             attributes.put("articulos", lista);
             return new ModelAndView(attributes, "index.ftl");
 
@@ -148,6 +178,9 @@ public class main {
             attributes.put("etiquetas", listaEtiquetas);
             attributes.put("indice", indice);
             attributes.put("logged", logged);
+            if (usuario1.isAutor()){
+                attributes.put("autor", true);
+            }
             return new ModelAndView(attributes, "entrada.ftl");
             }, freeMarkerEngine);
 
@@ -161,8 +194,7 @@ public class main {
             return new ModelAndView(attributes, "modificarPost.ftl");
         }, freeMarkerEngine);
 
-*/
-      /*  post("/modificarArticuloForm/:indice", (request, response) -> {
+        post("/modificarArticuloForm/:indice", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
@@ -177,6 +209,25 @@ public class main {
         }, freeMarkerEngine);
 
 */
+
+
+        post("/like/:indice", (request, response) ->{
+            Map<String, Object> attributes = new HashMap<>();
+            int indice = Integer.parseInt(request.params("indice"));
+            lista.get(indice).setLikes(lista.get(indice).getLikes()+1);
+
+            response.redirect("/Entrada/:" + indice);
+            return null;
+        }, freeMarkerEngine);
+
+        post("/dislike/:indice", (request, response) ->{
+            Map<String, Object> attributes = new HashMap<>();
+            int indice = Integer.parseInt(request.params("indice"));
+            lista.get(indice).setDislikes(lista.get(indice).getDislikes()+1);
+
+            response.redirect("/Entrada/:" + indice);
+            return null;
+        }, freeMarkerEngine);
 
         post("/crear", (request, response) -> {
 
@@ -325,6 +376,7 @@ public class main {
 
         post("/loginForm", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
+
             String NombreDeUsuario = request.queryParams("Usuario");
             String clave = request.queryParams("password");
             int aux = 0;

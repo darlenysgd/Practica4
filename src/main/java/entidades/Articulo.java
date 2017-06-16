@@ -20,6 +20,8 @@ public class Articulo implements Serializable {
     private String titulo;
     private String cuerpo;
     private String fecha;
+    private int likes;
+    private int dislikes;
 
     @OneToOne
     private Usuario autor;
@@ -93,5 +95,21 @@ public class Articulo implements Serializable {
 
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
     }
 }
