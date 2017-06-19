@@ -29,7 +29,7 @@ public class main {
     static boolean califico;
     static Usuario usuario1 = new Usuario();
     static List<Comentario> listaComentarios = new ArrayList<>();
-    static int pag = 0;
+    static int pag = 1;
 
     public static void main(String[] args) {
 
@@ -132,24 +132,30 @@ public class main {
             int numPag = Integer.parseInt(request.params("numPag"));
             int numPagAux = numPag*5;
             boolean mas = false;
+            boolean vacio = true;
 
 
             List<Articulo> subLista = ArticuloServices.getInstancia().pagination(numPag);
 
-            if (ArticuloServices.getInstancia().pagination(numPag) != null){
+            if (ArticuloServices.getInstancia().pagination(numPag) == null){
+
+                vacio = false;
+
+
+            } else {
                 mas = true;
                 attributes.put("articulos", subLista);
 
-                attributes.put("mas", mas);
-                attributes.put("numPag", numPag);
-                return new ModelAndView(attributes, "index.ftl");
+
             }
+            attributes.put("vacio", vacio);
 
-            numPag = numPag -1;
+                numPag = numPag - 1;
 
+            attributes.put("mas", mas);
+            attributes.put("numPag", numPag);
+            return new ModelAndView(attributes, "index.ftl");
 
-            response.redirect("/HomePage/"+numPag);
-            return  null;
 
 
         }, freeMarkerEngine);
