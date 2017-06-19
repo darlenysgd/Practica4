@@ -27,6 +27,7 @@ public class main {
     static List<Etiqueta> listaEtiquetas = new ArrayList<>();
     static boolean logged = false;
     static boolean califico;
+    static boolean calificoComment;
     static Usuario usuario1 = new Usuario();
     static List<Comentario> listaComentarios = new ArrayList<>();
     static int pag = 1;
@@ -99,6 +100,21 @@ public class main {
             }
         });
 
+        before("/likeComment/:id", (request, response) -> {
+
+            String str = request.session().attribute("usuario");
+            if (str == null ){
+                response.redirect("/login");
+            }
+        });
+
+        before("/dislikeComment/:id", (request, response) -> {
+
+            String str = request.session().attribute("usuario");
+            if (str == null ){
+                response.redirect("/login");
+            }
+        });
         before("/eliminarArticulo/:id", (request, response) -> {
 
             String str = request.session().attribute("usuario");
@@ -130,7 +146,7 @@ public class main {
 
             Map<String, Object> attributes = new HashMap<>();
             int numPag = Integer.parseInt(request.params("numPag"));
-            int numPagAux = numPag*5;
+            pag = numPag;
             boolean mas = false;
             boolean vacio = true;
 
@@ -148,10 +164,8 @@ public class main {
 
 
             }
+
             attributes.put("vacio", vacio);
-
-                numPag = numPag - 1;
-
             attributes.put("mas", mas);
             attributes.put("numPag", numPag);
             return new ModelAndView(attributes, "index.ftl");
@@ -224,10 +238,13 @@ public class main {
             boolean x = true;
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
-            attributes.put("articulo", lista.get(indice));
-            if(lista.get(indice).getComentarios() != null) {
 
-                attributes.put("comentarios", lista.get(indice).getComentarios());
+            attributes.put("articulo", lista.get(indice + ((pag -1) *5)));
+
+
+            if(lista.get(indice + ((pag -1) *5)).getComentarios() != null) {
+
+                attributes.put("comentarios", lista.get(indice + ((pag -1) *5)).getComentarios());
             }
             else
             {
@@ -236,9 +253,9 @@ public class main {
 
             attributes.put("comentarioNull", x);
 
-            if(lista.get(indice).getEtiquetas() != null) {
+            if(lista.get(indice + ((pag -1) *5)).getEtiquetas() != null) {
 
-                attributes.put("etiquetas", lista.get(indice).getEtiquetas());
+                attributes.put("etiquetas", lista.get(indice + ((pag -1) *5)).getEtiquetas());
             }
 
             attributes.put("indice", indice);
@@ -251,7 +268,7 @@ public class main {
 
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
-            attributes.put("articulo", lista.get(indice));
+            attributes.put("articulo", lista.get(indice + ((pag -1) *5)));
             attributes.put("indice", indice);
             return new ModelAndView(attributes, "modificarPost.ftl");
         }, freeMarkerEngine);
@@ -262,7 +279,7 @@ public class main {
             Articulo art = new Articulo();
 
             int indice = Integer.parseInt(request.params("indice"));
-            art.setId(lista.get(indice).getId());
+            art.setId(lista.get(indice + ((pag -1) *5)).getId());
 
             art.setTitulo(request.queryParams("titulo"));
             art.setCuerpo(request.queryParams("contenido"));
@@ -305,9 +322,9 @@ public class main {
 
             int indice = Integer.parseInt(request.params("indice"));
             if (califico == false) {
-                lista.get(indice).setLikes(lista.get(indice).getLikes() + 1);
-                Articulo art = lista.get(indice);
-                art.setLikes(lista.get(indice).getLikes());
+                lista.get(indice + ((pag -1) *5)).setLikes(lista.get(indice + ((pag -1) *5)).getLikes() + 1);
+                Articulo art = lista.get(indice+ ((pag -1) *5));
+                art.setLikes(lista.get(indice + ((pag -1) *5)).getLikes());
                 ArticuloServices.getInstancia().editar(art);
                 califico = true;
                 //ACTUALIZAR LIKE EN BD
@@ -320,10 +337,10 @@ public class main {
 
                 int indice = Integer.parseInt(request.params("indice"));
             if (califico == false) {
-                lista.get(indice).setDislikes(lista.get(indice).getDislikes() + 1);
+                lista.get(indice + ((pag -1) *5)).setDislikes(lista.get(indice + ((pag -1) *5)).getDislikes() + 1);
 
-                Articulo art = lista.get(indice);
-                art.setDislikes(lista.get(indice).getDislikes());
+                Articulo art = lista.get(indice+ ((pag -1) *5));
+                art.setDislikes(lista.get(indice+ ((pag -1) *5)).getDislikes());
                 ArticuloServices.getInstancia().editar(art);
                 califico = true;
             }
@@ -331,6 +348,37 @@ public class main {
             return null;
         }, freeMarkerEngine);
 
+        post("/likeComment/:indiceComment/:indiceArt", (request, response) ->{
+
+            int indice = Integer.parseInt(request.params("indiceComment"));
+            int indiceArticulo = Integer.parseInt(request.params("indiceArt"));
+            if (calificoComment == false) {
+                lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice).setLikes(lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice).getLikes() + 1);
+                Comentario com = lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice);
+                com.setLikes(lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice).getLikes());
+                ComentarioServices.getInstancia().editar(com);
+                califico = true;
+                //ACTUALIZAR LIKE EN BD
+            }
+            response.redirect("/Entrada/" + indiceArticulo);
+            return null;
+        }, freeMarkerEngine);
+
+        post("/dislikeComment/:indiceComment/:indiceArt", (request, response) ->{
+
+            int indice = Integer.parseInt(request.params("indiceComment"));
+            int indiceArticulo = Integer.parseInt(request.params("indiceArt"));
+            if (calificoComment == false) {
+                lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice).setDislikes(lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice).getDislikes() + 1);
+                Comentario com = lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice);
+                com.setDislikes(lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice).getDislikes());
+                ComentarioServices.getInstancia().editar(com);
+                califico = true;
+                //ACTUALIZAR LIKE EN BD
+            }
+            response.redirect("/Entrada/" + indiceArticulo);
+            return null;
+        }, freeMarkerEngine);
 
         post("/crear", (request, response) -> {
 
@@ -489,6 +537,7 @@ public class main {
                     usuario1 = usr;
                     logged = true;
                     califico = false;
+                    calificoComment = false;
                     break;
                 }
 

@@ -142,11 +142,29 @@
         <#if comentarioNull>
             <#list comentarios as comentario>
 
-
             <div class="media">
                 <div class="media-body">
                     <h4 class="media-heading">${comentario.autor.username}</h4>
                     ${comentario.comentatio}
+                    <p>Likes: ${comentario.getLikes()} Dislikes: ${comentario.getDislikes()}</p>
+
+                <#if logged>
+
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <form action="/likeComment/${comentario_index}/${indice}" method="post">
+                                <button class="btn btn-icon"><i class="glyphicon glyphicon-thumbs-up"></i></button>
+                            </form>
+                        </div>
+
+                        <div class="col-xs-1">
+                            <form action="/dislikeComment/${comentario_index}/${indice}" method="post">
+                                <button class="btn btn-icon"><i class="glyphicon glyphicon-thumbs-down"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    <br>
+                </#if>
                 </div>
             </div>
 
