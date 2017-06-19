@@ -353,16 +353,19 @@ public class main {
             Etiqueta x ;
             for(int i = 0; i < listaEtiquetas1.size(); i++){
 
-                if(EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i))==null){
-                x = new Etiqueta(listaEtiquetas1.get(i));
-                EtiquetaServices.getInstancia().crear(x);
-                aux.add(x);
-                 listaEtiquetas = EtiquetaServices.getInstancia().findAll();
-            }
-            else {
-                    x = EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i));
-                    aux.add(x);
+                for(int j = 0; j < listaEtiquetas.size(); j++) {
+                    if (listaEtiquetas.get(j).getEtiqueta().equals(listaEtiquetas1.get(i))) {
+                        x = new Etiqueta(listaEtiquetas1.get(i));
+                        EtiquetaServices.getInstancia().crear(x);
+                        aux.add(x);
+                        listaEtiquetas = EtiquetaServices.getInstancia().findAll();
+                    }
+                    else {
+                        x = EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i));
+                        aux.add(x);
+                    }
                 }
+
             }
 
             art.setEtiquetas(aux);
