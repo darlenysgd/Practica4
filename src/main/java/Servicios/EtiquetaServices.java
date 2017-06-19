@@ -4,6 +4,7 @@ import entidades.Etiqueta;
 import entidades.Usuario;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.List;
 
@@ -12,24 +13,23 @@ import java.util.List;
  */
 public class EtiquetaServices extends GestionDB<Etiqueta> {
 
+
     private static EtiquetaServices instancia;
 
-    private EtiquetaServices(){
+    private EtiquetaServices() {
         super(Etiqueta.class);
     }
 
-    public static EtiquetaServices getInstancia(){
-        if(instancia==null){
+    public static EtiquetaServices getInstancia() {
+        if (instancia == null) {
             instancia = new EtiquetaServices();
         }
         return instancia;
     }
 
     /**
-     *
      * @param etiqueta
      * @return
      */
-
 
 }

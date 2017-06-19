@@ -12,7 +12,15 @@ import java.util.Set;
  * Created by darle on 6/3/2017.
  */
 @Entity
+@NamedQueries({
+        @NamedQuery(
+                name = "Articulo.findArticulobyEtiqueta",
+                query = "SELECT a FROM Articulo a JOIN a.etiquetas t WHERE t.id = :id"
+        )
+})
 public class Articulo implements Serializable {
+
+    public static   String QUERY_NAME_FIND_ARTICULO_BY_ETIQUETA = "Articulo.findArticulobyEtiqueta";
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -24,9 +32,10 @@ public class Articulo implements Serializable {
     private int likes;
     private int dislikes;
 
+
     @OneToOne
     private Usuario autor;
-    @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+    @ManyToMany (fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE})
     private List<Etiqueta> etiquetas ;
     @OneToMany (fetch = FetchType.EAGER)
     private List<Comentario> comentarios;

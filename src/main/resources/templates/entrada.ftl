@@ -188,7 +188,7 @@
 
                             <button class="btn btn-icon">${etiqueta.etiqueta}</button>
                         </form>
-                              </#list>
+                    </#list>
                     </div>
                 </div>
             </div>
