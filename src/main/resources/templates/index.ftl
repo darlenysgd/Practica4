@@ -95,7 +95,7 @@
 
                 </#list>
 
-                <#if numPag gt 0 >
+                <#if numPag gt 1 >
                     <form action="/HomePage/${numPag -1 }" method="get">
                         <button class="btn btn-icon">Anterior</button>
                     </form>

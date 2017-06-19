@@ -14,6 +14,7 @@ import java.util.Arrays;
 import entidades.Articulo;
 
 import static spark.Spark.*;
+import static spark.debug.DebugScreen.enableDebugScreen;
 
 
 /**
@@ -33,6 +34,7 @@ public class main {
     public static void main(String[] args) {
 
         staticFiles.location("/");
+        enableDebugScreen();
         Articulo articulo = new Articulo();
 
 
@@ -51,7 +53,6 @@ public class main {
         listaUsuarios.add(usuario1);
 
        // articulo.setArticulos(listaArticulos);
-
 
         listaUsuarios = UsuariosServices.getInstancia().findAll();
         lista = ArticuloServices.getInstancia().findAll();
@@ -119,7 +120,7 @@ public class main {
 
             Map<String, Object> attributes = new HashMap<>();
 
-            response.redirect("/HomePage/" + 0);
+            response.redirect("/HomePage/" + 1);
             return null;
 
 
@@ -131,17 +132,25 @@ public class main {
             int numPag = Integer.parseInt(request.params("numPag"));
             int numPagAux = numPag*5;
             boolean mas = false;
-            if(numPagAux + 5 >  lista.size() ){
-                ArrayList<Articulo> subLista = new ArrayList<>(lista.subList(numPagAux, lista.size()));
-                attributes.put("articulos", subLista);
-            } else{
-                ArrayList<Articulo> subLista = new ArrayList(lista.subList(numPagAux, numPagAux + 5));
-                attributes.put("articulos", subLista);
+
+
+            List<Articulo> subLista = ArticuloServices.getInstancia().pagination(numPag);
+
+            if (ArticuloServices.getInstancia().pagination(numPag) != null){
                 mas = true;
+                attributes.put("articulos", subLista);
+
+                attributes.put("mas", mas);
+                attributes.put("numPag", numPag);
+                return new ModelAndView(attributes, "index.ftl");
             }
-            attributes.put("mas", mas);
-            attributes.put("numPag", numPag);
-            return new ModelAndView(attributes, "index.ftl");
+
+            numPag = numPag -1;
+
+
+            response.redirect("/HomePage/"+numPag);
+            return  null;
+
 
         }, freeMarkerEngine);
 
@@ -150,7 +159,7 @@ public class main {
             Map<String, Object> attributes = new HashMap<>();
             int indice = Integer.parseInt(request.params("indice"));
 
-            response.redirect("/HomePage/tags/" + indice + "/" + 0);
+            response.redirect("/HomePage/tags/" + indice + "/" + 1);
             return null;
 
 
@@ -221,7 +230,7 @@ public class main {
 
             attributes.put("comentarioNull", x);
 
-            if(lista.get(indice ).getEtiquetas() != null) {
+            if(lista.get(indice).getEtiquetas() != null) {
 
                 attributes.put("etiquetas", lista.get(indice).getEtiquetas());
             }
@@ -258,7 +267,8 @@ public class main {
             String tags = request.queryParams("etiquetas");
 
 
-            ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
+            String auxEtiquetas = tags.replaceAll(" ", "");
+            List<String> listaEtiquetas1 = Arrays.asList(auxEtiquetas.split(","));
             List<Etiqueta> aux = new ArrayList<>();
 
             Etiqueta x ;
@@ -266,6 +276,7 @@ public class main {
 
                 if(EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i))==null){
                     x = new Etiqueta(listaEtiquetas1.get(i));
+
                     EtiquetaServices.getInstancia().crear(x);
                     aux.add(x);
                     listaEtiquetas = EtiquetaServices.getInstancia().findAll();
@@ -333,6 +344,8 @@ public class main {
             String tags = request.queryParams("etiquetas");
 
 
+
+            tags = tags.replaceAll(" ", "");
 
             ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
             List<Etiqueta> aux = new ArrayList<>();
@@ -472,7 +485,7 @@ public class main {
 
             }
 
-              if (aux == 1){
+            if (aux == 1){
               response.redirect("/login");
              }
 

@@ -2,10 +2,7 @@ package Servicios;
 
 import entidades.Articulo;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Id;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaQuery;
 
 import java.lang.reflect.Field;
@@ -77,7 +74,7 @@ public class GestionDB<T> {
                 System.out.println("La entidad a guardar existe, no creada.");
                 return;
             }
-        }catch (IllegalArgumentException ie){
+        }catch (IllegalStateException ie){
             //
             System.out.println("Parametro ilegal.");
         }
@@ -87,10 +84,10 @@ public class GestionDB<T> {
             em.persist(entidad);
             em.getTransaction().commit();
 
-        }catch (Exception ex){
+        }/*catch (Exception ex){
             em.getTransaction().rollback();
             throw  ex;
-        } finally {
+        } */finally {
             em.close();
         }
     }
@@ -164,4 +161,26 @@ public class GestionDB<T> {
         }finally {
             em.close();
         }
-    }}
+    }
+
+
+    public List<Articulo> pagination(int pageNumber){
+        EntityManager em = getEntityManager();
+        int pageSize = 5;
+        int x = (pageNumber-1) * pageSize;
+        Query query = em.createQuery("from Articulo");
+        query.setFirstResult(x);
+        query.setMaxResults(pageSize);
+        List <Articulo> articulos = query.getResultList();
+
+        if (articulos.size() == 0){
+
+            return  null;
+        }
+
+        else {
+
+            return articulos;
+        }
+    }
+}
