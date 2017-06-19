@@ -103,7 +103,7 @@ public class GestionDB<T> {
             em.merge(entidad);
             em.getTransaction().commit();
         } catch (Exception ex) {
-            em.getTransaction().rollback();
+            //em.getTransaction().rollback();
             throw ex;
         } finally {
             em.close();
@@ -168,7 +168,7 @@ public class GestionDB<T> {
         EntityManager em = getEntityManager();
         int pageSize = 5;
         int x = (pageNumber-1) * pageSize;
-        Query query = em.createQuery("from Articulo");
+        Query query = em.createQuery("from Articulo order by id desc");
         query.setFirstResult(x);
         query.setMaxResults(pageSize);
         List <Articulo> articulos = query.getResultList();

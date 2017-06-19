@@ -61,6 +61,8 @@ public class main {
         lista = ArticuloServices.getInstancia().findAll();
         listaEtiquetas = EtiquetaServices.getInstancia().findAll();
 
+        listaUsuarios.add(usuario1);
+
         before("/NuevoUsuario", (request, response) -> {
 
            String str = request.session().attribute("usuario");
@@ -153,6 +155,7 @@ public class main {
             boolean vacio = true;
 
 
+
             List<Articulo> subLista = ArticuloServices.getInstancia().pagination(numPag);
 
             if (ArticuloServices.getInstancia().pagination(numPag) == null){
@@ -168,6 +171,7 @@ public class main {
             }
 
 
+            attributes.put("vacio", vacio);
             attributes.put("mas", mas);
             attributes.put("numPag", numPag);
             attributes.put("etiquetas", listaEtiquetas);
@@ -415,30 +419,22 @@ public class main {
 
             Etiqueta x ;
 
-            for(int i = 0; i < listaEtiquetas1.size(); i++){
 
-                for(int j = 0; j < listaEtiquetas.size(); j++) {
+            for(String et: listaEtiquetas1){
+                x = EtiquetaServices.getInstancia().findEtiqueta(et);
+                if(x == null){
 
-                    if (listaEtiquetas.get(j).getEtiqueta().equals(listaEtiquetas1.get(i))) {
-
-                        x = EtiquetaServices.getInstancia().find(listaEtiquetas.get(j).getId());
-                        aux.add(x);
-
-                    }
-                    else {
-
-                        x = new Etiqueta(listaEtiquetas1.get(i));
-                        EtiquetaServices.getInstancia().crear(x);
-                        aux.add(x);
-                        listaEtiquetas = EtiquetaServices.getInstancia().findAll();
-                    }
-
+                    Etiqueta etiqueta = new Etiqueta(et);
+                    aux.add(etiqueta);
                 }
+                else{
 
+                    aux.add(x);
+                }
             }
 
             art.setEtiquetas(aux);
-            ArticuloServices.getInstancia().crear(art);
+            ArticuloServices.getInstancia().editar(art);
             lista = ArticuloServices.getInstancia().findAll();
             listaEtiquetas = EtiquetaServices.getInstancia().findAll();
 

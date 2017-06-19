@@ -1,5 +1,7 @@
 package entidades;
 
+import javassist.runtime.Desc;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.Set;
                 name = "Articulo.findArticulobyEtiqueta",
                 query = "SELECT a FROM Articulo a JOIN a.etiquetas t WHERE t.id = :id"
         )
+
 })
 public class Articulo implements Serializable {
 
@@ -35,7 +38,7 @@ public class Articulo implements Serializable {
 
     @OneToOne
     private Usuario autor;
-    @ManyToMany (fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE})
+    @ManyToMany (fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE, CascadeType.ALL})
     private List<Etiqueta> etiquetas ;
     @OneToMany (fetch = FetchType.EAGER)
     private List<Comentario> comentarios;

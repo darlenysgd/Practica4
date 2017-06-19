@@ -6,7 +6,16 @@ import javax.persistence.*;
  * Created by darle on 6/3/2017.
  */
 @Entity
+@NamedQueries({
+        @NamedQuery(
+                name = "Etiqueta.findArticulobyEtiqueta",
+                query = "SELECT e FROM Etiqueta e WHERE e.etiqueta = :etiqueta"
+        )
+
+})
 public class Etiqueta {
+
+    public static   String QUERY_FIND_ETIQUETA_BY_NAME = "Etiqueta.findArticulobyEtiqueta";
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

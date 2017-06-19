@@ -1,5 +1,6 @@
 package Servicios;
 
+import entidades.Articulo;
 import entidades.Etiqueta;
 import entidades.Usuario;
 
@@ -32,4 +33,18 @@ public class EtiquetaServices extends GestionDB<Etiqueta> {
      * @return
      */
 
+
+    public Etiqueta findEtiqueta(String etiqueta) {
+
+        EntityManager em = getEntityManager();
+
+        try {
+            Query q = em.createNamedQuery(Etiqueta.QUERY_FIND_ETIQUETA_BY_NAME);
+            q.setParameter("etiqueta", etiqueta);
+            return (Etiqueta) q.getSingleResult();
+        } catch (NoResultException e){
+            return null;
+        }
+
+    }
 }

@@ -116,7 +116,7 @@
 
                 <!-- Blog Categories Well -->
                 <div class="well">
-                    <h4>Puede que sirva pa las etiquetas</h4>
+                    <h4>Etiquetas:</h4>
                     <div class="row">
                         <div class="col-lg-6">
                             <#list etiquetas as et>
