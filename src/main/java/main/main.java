@@ -164,25 +164,15 @@ public class main {
                 mas = true;
                 attributes.put("vacio", vacio);
                 attributes.put("articulos", subLista);
-                attributes.put("mas", mas);
-                attributes.put("numPag", numPag);
-                attributes.put("etiquetas", listaEtiquetas);
-                return new ModelAndView(attributes, "index.ftl");
 
             }
 
 
+            attributes.put("mas", mas);
+            attributes.put("numPag", numPag);
+            attributes.put("etiquetas", listaEtiquetas);
+            return new ModelAndView(attributes, "index.ftl");
 
-
-
-
-            attributes.put("vacio", vacio);
-
-            numPag = numPag -1;
-
-
-            response.redirect("/HomePage/"+numPag);
-            return  null;
 
 
         }, freeMarkerEngine);
