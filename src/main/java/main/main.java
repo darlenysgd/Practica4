@@ -146,6 +146,7 @@ public class main {
 
             } else {
                 mas = true;
+                attributes.put("vacio", vacio);
                 attributes.put("articulos", subLista);
                 attributes.put("mas", mas);
                 attributes.put("numPag", numPag);
@@ -192,12 +193,14 @@ public class main {
             int numPag = Integer.parseInt(request.params("numPag"));
             int numPagAux = numPag*5;
             boolean mas = false;
+            boolean vacio = true;
 
 
             //buscar todos los articulos que contengan esa etiqueta y generar una lista
 
             attributes.put("numPag", numPag);
             attributes.put("mas", mas);
+            attributes.put("vacio", vacio);
             List<Articulo> articulos_etq = ArticuloServices.getInstancia().findAllEtiquetas(listaEtiquetas.get(indice).getId());
             attributes.put("articulos", articulos_etq);
             attributes.put("etiquetas", listaEtiquetas);
@@ -362,7 +365,7 @@ public class main {
 
             ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
             List<Etiqueta> aux = new ArrayList<>();
-            ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
+
 
             Etiqueta x ;
 
@@ -383,10 +386,7 @@ public class main {
                         aux.add(x);
                         listaEtiquetas = EtiquetaServices.getInstancia().findAll();
                     }
-                    else {
-                        x = EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i));
-                        aux.add(x);
-                    }
+
                 }
 
             }
