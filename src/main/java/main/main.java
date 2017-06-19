@@ -100,7 +100,7 @@ public class main {
             }
         });
 
-        before("/likeComment/:id", (request, response) -> {
+        before("/likeComment/:indiceComment/:indiceArt", (request, response) -> {
 
             String str = request.session().attribute("usuario");
             if (str == null ){
@@ -108,7 +108,7 @@ public class main {
             }
         });
 
-        before("/dislikeComment/:id", (request, response) -> {
+        before("/dislikeComment/:indiceComment/:indiceArt", (request, response) -> {
 
             String str = request.session().attribute("usuario");
             if (str == null ){
@@ -357,7 +357,7 @@ public class main {
                 Comentario com = lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice);
                 com.setLikes(lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice).getLikes());
                 ComentarioServices.getInstancia().editar(com);
-                califico = true;
+                calificoComment = true;
                 //ACTUALIZAR LIKE EN BD
             }
             response.redirect("/Entrada/" + indiceArticulo);
@@ -373,7 +373,7 @@ public class main {
                 Comentario com = lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice);
                 com.setDislikes(lista.get(indiceArticulo + ((pag -1) *5)).getComentarios().get(indice).getDislikes());
                 ComentarioServices.getInstancia().editar(com);
-                califico = true;
+                calificoComment = true;
                 //ACTUALIZAR LIKE EN BD
             }
             response.redirect("/Entrada/" + indiceArticulo);
