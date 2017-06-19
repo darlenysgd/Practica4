@@ -70,7 +70,7 @@
                     Programación Web
                     <small>Práctica #3</small>
                 </h1>
-
+                <#if vacio>
                  <#list articulos as art>
                     <h2>
                         <a href="/Entrada/${art_index}">${art.getTitulo()}</a>
@@ -94,6 +94,7 @@
                     <hr>
 
                 </#list>
+                    </#if>
 
                 <#if numPag gt 1 >
                     <form action="/HomePage/${numPag -1 }" method="get">

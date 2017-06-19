@@ -31,7 +31,7 @@ public class main {
     static boolean califico;
     static Usuario usuario1 = new Usuario();
     static List<Comentario> listaComentarios = new ArrayList<>();
-    static int pag = 0;
+    static int pag = 1;
 
     public static void main(String[] args) {
 
@@ -134,19 +134,27 @@ public class main {
             int numPag = Integer.parseInt(request.params("numPag"));
             int numPagAux = numPag*5;
             boolean mas = false;
+            boolean vacio = true;
 
 
             List<Articulo> subLista = ArticuloServices.getInstancia().pagination(numPag);
 
-            if (ArticuloServices.getInstancia().pagination(numPag) != null){
+            if (ArticuloServices.getInstancia().pagination(numPag) == null){
+
+                vacio = false;
+
+
+            } else {
                 mas = true;
                 attributes.put("articulos", subLista);
-
                 attributes.put("mas", mas);
                 attributes.put("numPag", numPag);
                 attributes.put("etiquetas", listaEtiquetas);
                 return new ModelAndView(attributes, "index.ftl");
+
             }
+
+            attributes.put("vacio", vacio);
 
             numPag = numPag -1;
 
@@ -295,6 +303,7 @@ public class main {
             art.setEtiquetas(aux);
             listaEtiquetas = EtiquetaServices.getInstancia().findAll();
             ArticuloServices.getInstancia().editar(art);
+            lista.set(indice, art);
             response.redirect("/Home");
             return null;
         }, freeMarkerEngine);
@@ -347,8 +356,11 @@ public class main {
             art.setAutor(usr);
             String tags = request.queryParams("etiquetas");
 
+
+
             tags = tags.replaceAll(" ", "");
 
+            ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
             List<Etiqueta> aux = new ArrayList<>();
             ArrayList<String> listaEtiquetas1 = new ArrayList<>(Arrays.asList(tags.split(",")));
 
@@ -371,14 +383,15 @@ public class main {
                         aux.add(x);
                         listaEtiquetas = EtiquetaServices.getInstancia().findAll();
                     }
+                    else {
+                        x = EtiquetaServices.getInstancia().find(listaEtiquetas1.get(i));
+                        aux.add(x);
+                    }
                 }
 
             }
 
             art.setEtiquetas(aux);
-
-
-
             ArticuloServices.getInstancia().crear(art);
             lista = ArticuloServices.getInstancia().findAll();
             listaEtiquetas = EtiquetaServices.getInstancia().findAll();
