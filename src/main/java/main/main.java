@@ -466,6 +466,7 @@ public class main {
             for(Usuario aux: listaUsuarios){
                 if(aux.getUsername().equals(str)){
                     usr = aux;
+
                 }
             }
             String comentario = request.queryParams("comentario");
